@@ -1,0 +1,15 @@
+C:\dev\_learning\Brechosfera\Brechosfera.Application\bin\Debug\net8.0\Brechosfera.Application.deps.json
+C:\dev\_learning\Brechosfera\Brechosfera.Application\bin\Debug\net8.0\Brechosfera.Application.dll
+C:\dev\_learning\Brechosfera\Brechosfera.Application\bin\Debug\net8.0\Brechosfera.Application.pdb
+C:\dev\_learning\Brechosfera\Brechosfera.Application\bin\Debug\net8.0\Brechosfera.Domain.dll
+C:\dev\_learning\Brechosfera\Brechosfera.Application\bin\Debug\net8.0\Brechosfera.Domain.pdb
+C:\dev\_learning\Brechosfera\Brechosfera.Application\obj\Debug\net8.0\Brechosfera.Application.csproj.AssemblyReference.cache
+C:\dev\_learning\Brechosfera\Brechosfera.Application\obj\Debug\net8.0\Brechosfera.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\dev\_learning\Brechosfera\Brechosfera.Application\obj\Debug\net8.0\Brechosfera.Application.AssemblyInfoInputs.cache
+C:\dev\_learning\Brechosfera\Brechosfera.Application\obj\Debug\net8.0\Brechosfera.Application.AssemblyInfo.cs
+C:\dev\_learning\Brechosfera\Brechosfera.Application\obj\Debug\net8.0\Brechosfera.Application.csproj.CoreCompileInputs.cache
+C:\dev\_learning\Brechosfera\Brechosfera.Application\obj\Debug\net8.0\Brechosf.7B905066.Up2Date
+C:\dev\_learning\Brechosfera\Brechosfera.Application\obj\Debug\net8.0\Brechosfera.Application.dll
+C:\dev\_learning\Brechosfera\Brechosfera.Application\obj\Debug\net8.0\refint\Brechosfera.Application.dll
+C:\dev\_learning\Brechosfera\Brechosfera.Application\obj\Debug\net8.0\Brechosfera.Application.pdb
+C:\dev\_learning\Brechosfera\Brechosfera.Application\obj\Debug\net8.0\ref\Brechosfera.Application.dll
