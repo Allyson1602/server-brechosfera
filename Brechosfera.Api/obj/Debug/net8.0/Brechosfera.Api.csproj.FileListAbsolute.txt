@@ -168,4 +168,7 @@ C:\dev\_learning\Brechosfera\Brechosfera.Api\bin\Debug\net8.0\zh-Hans\Microsoft.
 C:\dev\_learning\Brechosfera\Brechosfera.Api\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\dev\_learning\Brechosfera\Brechosfera.Api\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
 C:\dev\_learning\Brechosfera\Brechosfera.Api\obj\Debug\net8.0\swae.build.ex.cache
+C:\dev\_learning\Brechosfera\Brechosfera.Api\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\dev\_learning\Brechosfera\Brechosfera.Api\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\dev\_learning\Brechosfera\Brechosfera.Api\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\dev\_learning\Brechosfera\Brechosfera.Api\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

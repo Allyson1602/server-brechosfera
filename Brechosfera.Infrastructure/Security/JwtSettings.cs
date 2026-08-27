@@ -1,7 +1,11 @@
 ﻿namespace Brechosfera.Infrastructure.Security;
 
-public class JwtSettings
+public sealed record JwtSettings
 {
-    public string SecretKey { get; set; } = string.Empty;
-    public int ExpirationHours { get; set; } = 2;
+    public const string SectionName = "Jwt";
+
+    public required string Issuer { get; init; }
+    public required string Audience { get; init; }
+    public required string Key { get; init; }
+    public int ExpirationMinutes { get; init; } = 120;
 }

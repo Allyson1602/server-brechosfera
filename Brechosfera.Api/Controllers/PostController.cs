@@ -3,6 +3,7 @@ using Brechosfera.Application.Interfaces;
 using Brechosfera.Application.Notifications;
 using Brechosfera.Application.Requests;
 using Brechosfera.Application.Responses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Brechosfera.Api.Controllers;
@@ -34,6 +35,7 @@ public class PostController : ApiController
         return CustomResponse(result);
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<ApiResponse<PostResponse>>> CreatePost(PostRequest request, CancellationToken cancellationToken)
     {

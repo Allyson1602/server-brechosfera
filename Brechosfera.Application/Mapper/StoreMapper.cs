@@ -26,8 +26,8 @@ public static class StoreMapper
 
         return new StoreResponse(
             store.Id,
+            store.OwnerUserId,
             store.Name,
-            store.ResponsibleName,
             store.AveragePrice,
             store.LocalType,
             productTypes,

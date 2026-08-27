@@ -19,15 +19,12 @@ public class JwtProvider : ITokenGenerator
 
     public string Generate(UserCredential user)
     {
-        if (string.IsNullOrWhiteSpace(_jwtSettings.SecretKey))
-            throw new InvalidOperationException("JWT SecretKey não configurada.");
-
         var tokenhandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_jwtSettings.SecretKey);
+        var key = Encoding.UTF8.GetBytes(_jwtSettings.Key);
 
         var claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email),
             new Claim(JwtRegisteredClaimNames.UniqueName, user.Username)
         };
@@ -35,7 +32,9 @@ public class JwtProvider : ITokenGenerator
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddHours(_jwtSettings.ExpirationHours),
+            Issuer = _jwtSettings.Issuer,
+            Audience = _jwtSettings.Audience,
+            Expires = DateTime.UtcNow.AddMinutes(_jwtSettings.ExpirationMinutes),
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(key),
                 SecurityAlgorithms.HmacSha256Signature

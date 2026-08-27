@@ -1032,6 +1032,10 @@
       "StoreRequest": {
         "type": "object",
         "properties": {
+          "ownerUserId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "name": {
             "type": "string",
             "nullable": true
@@ -1090,11 +1094,11 @@
             "type": "string",
             "format": "uuid"
           },
-          "name": {
+          "ownerUserId": {
             "type": "string",
-            "nullable": true
+            "format": "uuid"
           },
-          "responsibleName": {
+          "name": {
             "type": "string",
             "nullable": true
           },

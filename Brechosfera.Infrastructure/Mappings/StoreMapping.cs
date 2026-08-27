@@ -18,8 +18,7 @@ public class StoreMapping : EntityMapping<Store>
 
         builder.HasIndex(x => x.Name).IsUnique();
 
-        builder.Property(x => x.ResponsibleName)
-            .HasMaxLength(150)
+        builder.Property(x => x.OwnerUserId)
             .IsRequired();
 
         builder.Property(x => x.AveragePrice)
@@ -34,6 +33,11 @@ public class StoreMapping : EntityMapping<Store>
 
         builder.Property(x => x.Description)
             .HasMaxLength(500);
+
+        builder.HasOne<UserCredential>()
+            .WithMany()
+            .HasForeignKey(x => x.OwnerUserId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasMany(x => x.ProductTypes)
             .WithMany()

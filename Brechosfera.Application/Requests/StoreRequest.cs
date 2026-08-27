@@ -4,6 +4,7 @@ using Brechosfera.Domain.ValueObjects;
 namespace Brechosfera.Application.Requests;
 
 public sealed record StoreRequest(
+    Guid OwnerUserId,
     string Name,
     string ResponsibleName,
     decimal AveragePrice,

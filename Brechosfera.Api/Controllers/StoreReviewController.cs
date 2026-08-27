@@ -3,6 +3,7 @@ using Brechosfera.Application.Interfaces;
 using Brechosfera.Application.Notifications;
 using Brechosfera.Application.Requests;
 using Brechosfera.Application.Responses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Brechosfera.Api.Controllers;
@@ -38,6 +39,7 @@ public class StoreReviewController : ApiController
         return CustomResponse(storeReview);
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<ApiResponse<StoreReviewResponse>>> AddStoreReview([FromBody] StoreReviewRequest request, CancellationToken cancellationToken)
     {

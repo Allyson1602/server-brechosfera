@@ -176,10 +176,8 @@ namespace Brechosfera.Infrastructure.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("varchar(150)");
 
-                    b.Property<string>("ResponsibleName")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("varchar(150)");
+                    b.Property<Guid>("OwnerUserId")
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTimeOffset?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -188,6 +186,8 @@ namespace Brechosfera.Infrastructure.Migrations
 
                     b.HasIndex("Name")
                         .IsUnique();
+
+                    b.HasIndex("OwnerUserId");
 
                     b.ToTable("Stores", (string)null);
                 });
@@ -392,6 +392,12 @@ namespace Brechosfera.Infrastructure.Migrations
 
             modelBuilder.Entity("Brechosfera.Domain.Entities.Store", b =>
                 {
+                    b.HasOne("Brechosfera.Domain.Entities.UserCredential", null)
+                        .WithMany()
+                        .HasForeignKey("OwnerUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.OwnsOne("Brechosfera.Domain.ValueObjects.Address", "Address", b1 =>
                         {
                             b1.Property<Guid>("StoreId")

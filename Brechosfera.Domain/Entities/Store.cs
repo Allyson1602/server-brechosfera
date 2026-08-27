@@ -14,8 +14,8 @@ public class Store : Entity, IAggregateRoot
     private readonly List<ProductType> _productTypes = new();
     private readonly List<SocialMedia> _socialMedia = new();
 
+    public Guid OwnerUserId { get; private set; }
     public string Name { get; private set; } = string.Empty;
-    public string ResponsibleName { get; private set; } = string.Empty;
     public decimal AveragePrice { get; private set; }
     public ELocalType LocalType { get; private set; }
     public int? AverageQuantity { get; private set; }
@@ -30,8 +30,8 @@ public class Store : Entity, IAggregateRoot
     private Store() { }
 
     public Store(
+        Guid ownerUserId,
         string name, 
-        string responsibleName, 
         decimal averagePrice, 
         ELocalType localType, 
         List<ProductType> productTypes,
@@ -42,14 +42,14 @@ public class Store : Entity, IAggregateRoot
     )
     {
         Guard.AgainstNullOrWhiteSpace(name, "STORE_NAME_INVALID", "Nome da loja inválida.");
-        Guard.AgainstNullOrWhiteSpace(responsibleName, "STORE_RESPONSIBLE_NAME_INVALID", "Nome do responsável inválido.");
+        Guard.AgainstEmptyGuid(ownerUserId, "STORE_OWNER_INVALID", "O usuário responsável pela loja é inválido.");
         Guard.AgainstEmptyList(productTypes, "PRODUCT_TYPE_EMPTY_LIST", "Informe os tipos de produto.");
         Guard.AgainstNegativeOrZero(averageQuantity, "STORE_AVERAGE_QUANTITY_MORE_ZERO", "Quantidade média deve ser maior que zero.");
         Guard.AgainstNegativeOrZero(averagePrice, "STORE_AVERAGE_PRICE_MORE_ZERO", "Preço médio deve ser  maior que zero.");
 
         Name = name;
         Description = description;
-        ResponsibleName = responsibleName;
+        OwnerUserId = ownerUserId;
         AverageQuantity = averageQuantity;
         AveragePrice = averagePrice;
         LocalType = localType;

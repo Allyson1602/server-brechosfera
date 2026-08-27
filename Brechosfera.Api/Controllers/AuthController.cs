@@ -3,7 +3,7 @@ using Brechosfera.Application.Interfaces;
 using Brechosfera.Application.Notifications;
 using Brechosfera.Application.Requests;
 using Brechosfera.Application.Responses;
-using Brechosfera.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Brechosfera.Api.Controllers;
@@ -19,6 +19,7 @@ public class AuthController : ApiController
         _userService = userService;
     }
 
+    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<ActionResult<ApiResponse<LoginResponse>>> Login([FromBody] LoginRequest request)
     {

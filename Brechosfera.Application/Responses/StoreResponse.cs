@@ -6,8 +6,8 @@ namespace Brechosfera.Application.Responses;
 
 public sealed record StoreResponse(
     Guid Id,
+    Guid OwnerUserId,
     string Name,
-    string ResponsibleName,
     decimal AveragePrice,
     ELocalType LocalType,
     List<ProductTypeResponse> ProductType,

@@ -57,8 +57,8 @@ public class StoreService : BaseService, IStoreService
         }
 
         Store newStore = new Store(
+            request.OwnerUserId,
             request.Name,
-            request.ResponsibleName,
             request.AveragePrice,
             (ELocalType)request.LocalType,
             productTypes,
