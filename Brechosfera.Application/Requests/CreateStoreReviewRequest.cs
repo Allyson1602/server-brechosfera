@@ -1,6 +1,6 @@
 ﻿namespace Brechosfera.Application.Requests;
 
-public sealed record StoreReviewRequest(
+public sealed record CreateStoreReviewRequest(
     Guid UserId,
     Guid StoreId,
     int Rating,

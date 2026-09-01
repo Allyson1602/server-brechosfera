@@ -14,17 +14,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
+                "$ref": "#/components/schemas/CreateLoginRequest"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
+                "$ref": "#/components/schemas/CreateLoginRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
+                "$ref": "#/components/schemas/CreateLoginRequest"
               }
             }
           }
@@ -35,7 +35,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LoginResponseApiResponse"
+                  "$ref": "#/components/schemas/LoginResponse"
                 }
               }
             }
@@ -54,17 +54,26 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/EventResponseIReadOnlyListApiResponse"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventResponse"
+                  }
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EventResponseIReadOnlyListApiResponse"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventResponse"
+                  }
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EventResponseIReadOnlyListApiResponse"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventResponse"
+                  }
                 }
               }
             }
@@ -79,17 +88,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/EventRequest"
+                "$ref": "#/components/schemas/CreateEventRequest"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/EventRequest"
+                "$ref": "#/components/schemas/CreateEventRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/EventRequest"
+                "$ref": "#/components/schemas/CreateEventRequest"
               }
             }
           }
@@ -100,17 +109,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/EventResponseApiResponse"
+                  "$ref": "#/components/schemas/EventResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EventResponseApiResponse"
+                  "$ref": "#/components/schemas/EventResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EventResponseApiResponse"
+                  "$ref": "#/components/schemas/EventResponse"
                 }
               }
             }
@@ -140,17 +149,26 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/EventResponseIReadOnlyListApiResponse"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventResponse"
+                  }
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EventResponseIReadOnlyListApiResponse"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventResponse"
+                  }
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EventResponseIReadOnlyListApiResponse"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventResponse"
+                  }
                 }
               }
             }
@@ -169,17 +187,26 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/PostResponseIReadOnlyListApiResponse"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PostResponse"
+                  }
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PostResponseIReadOnlyListApiResponse"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PostResponse"
+                  }
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PostResponseIReadOnlyListApiResponse"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PostResponse"
+                  }
                 }
               }
             }
@@ -194,17 +221,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PostRequest"
+                "$ref": "#/components/schemas/CreatePostRequest"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/PostRequest"
+                "$ref": "#/components/schemas/CreatePostRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/PostRequest"
+                "$ref": "#/components/schemas/CreatePostRequest"
               }
             }
           }
@@ -215,17 +242,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/PostResponseApiResponse"
+                  "$ref": "#/components/schemas/PostResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PostResponseApiResponse"
+                  "$ref": "#/components/schemas/PostResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PostResponseApiResponse"
+                  "$ref": "#/components/schemas/PostResponse"
                 }
               }
             }
@@ -255,17 +282,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/PostResponseApiResponse"
+                  "$ref": "#/components/schemas/PostResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PostResponseApiResponse"
+                  "$ref": "#/components/schemas/PostResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PostResponseApiResponse"
+                  "$ref": "#/components/schemas/PostResponse"
                 }
               }
             }
@@ -284,17 +311,26 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseIReadOnlyListApiResponse"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StoreResponse"
+                  }
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseIReadOnlyListApiResponse"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StoreResponse"
+                  }
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseIReadOnlyListApiResponse"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StoreResponse"
+                  }
                 }
               }
             }
@@ -309,17 +345,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/StoreRequest"
+                "$ref": "#/components/schemas/CreateStoreRequest"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/StoreRequest"
+                "$ref": "#/components/schemas/CreateStoreRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/StoreRequest"
+                "$ref": "#/components/schemas/CreateStoreRequest"
               }
             }
           }
@@ -330,17 +366,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseApiResponse"
+                  "$ref": "#/components/schemas/StoreResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseApiResponse"
+                  "$ref": "#/components/schemas/StoreResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseApiResponse"
+                  "$ref": "#/components/schemas/StoreResponse"
                 }
               }
             }
@@ -370,17 +406,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseApiResponse"
+                  "$ref": "#/components/schemas/StoreResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseApiResponse"
+                  "$ref": "#/components/schemas/StoreResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseApiResponse"
+                  "$ref": "#/components/schemas/StoreResponse"
                 }
               }
             }
@@ -409,17 +445,26 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreReviewResponseListApiResponse"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StoreReviewResponse"
+                  }
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreReviewResponseListApiResponse"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StoreReviewResponse"
+                  }
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreReviewResponseListApiResponse"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StoreReviewResponse"
+                  }
                 }
               }
             }
@@ -434,17 +479,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/StoreReviewRequest"
+                "$ref": "#/components/schemas/CreateStoreReviewRequest"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/StoreReviewRequest"
+                "$ref": "#/components/schemas/CreateStoreReviewRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/StoreReviewRequest"
+                "$ref": "#/components/schemas/CreateStoreReviewRequest"
               }
             }
           }
@@ -455,17 +500,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreReviewResponseApiResponse"
+                  "$ref": "#/components/schemas/StoreReviewResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreReviewResponseApiResponse"
+                  "$ref": "#/components/schemas/StoreReviewResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreReviewResponseApiResponse"
+                  "$ref": "#/components/schemas/StoreReviewResponse"
                 }
               }
             }
@@ -495,17 +540,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreReviewResponseApiResponse"
+                  "$ref": "#/components/schemas/StoreReviewResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreReviewResponseApiResponse"
+                  "$ref": "#/components/schemas/StoreReviewResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreReviewResponseApiResponse"
+                  "$ref": "#/components/schemas/StoreReviewResponse"
                 }
               }
             }
@@ -522,17 +567,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegisterRequest"
+                "$ref": "#/components/schemas/CreateRegisterRequest"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegisterRequest"
+                "$ref": "#/components/schemas/CreateRegisterRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/RegisterRequest"
+                "$ref": "#/components/schemas/CreateRegisterRequest"
               }
             }
           }
@@ -543,17 +588,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserResponseApiResponse"
+                  "$ref": "#/components/schemas/UserResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserResponseApiResponse"
+                  "$ref": "#/components/schemas/UserResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserResponseApiResponse"
+                  "$ref": "#/components/schemas/UserResponse"
                 }
               }
             }
@@ -632,14 +677,163 @@
         },
         "additionalProperties": false
       },
-      "ApiError": {
+      "CreateEventRequest": {
         "type": "object",
         "properties": {
-          "code": {
+          "banner": {
             "type": "string",
             "nullable": true
           },
-          "message": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "organizerName": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "$ref": "#/components/schemas/AddressRequest"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "responsibleStoreId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateLoginRequest": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreatePostRequest": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "image": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateRegisterRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateStoreRequest": {
+        "type": "object",
+        "properties": {
+          "ownerUserId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "averagePrice": {
+            "type": "number",
+            "format": "double"
+          },
+          "localType": {
+            "$ref": "#/components/schemas/ELocalType"
+          },
+          "productTypeKeys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "averageQuantity": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "$ref": "#/components/schemas/AddressRequest"
+          },
+          "socialMedia": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SocialMediaRequest"
+            },
+            "nullable": true
+          },
+          "phones": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PhoneRequest"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateStoreReviewRequest": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "storeId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "rating": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "comment": {
             "type": "string",
             "nullable": true
           }
@@ -686,43 +880,6 @@
         "type": "integer",
         "format": "int32"
       },
-      "EventRequest": {
-        "type": "object",
-        "properties": {
-          "banner": {
-            "type": "string",
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "organizerName": {
-            "type": "string",
-            "nullable": true
-          },
-          "address": {
-            "$ref": "#/components/schemas/AddressRequest"
-          },
-          "startDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "endDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "responsibleStoreId": {
-            "type": "string",
-            "format": "uuid"
-          }
-        },
-        "additionalProperties": false
-      },
       "EventResponse": {
         "type": "object",
         "properties": {
@@ -764,62 +921,6 @@
         },
         "additionalProperties": false
       },
-      "EventResponseApiResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/EventResponse"
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ApiError"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "EventResponseIReadOnlyListApiResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EventResponse"
-            },
-            "nullable": true
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ApiError"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "LoginRequest": {
-        "type": "object",
-        "properties": {
-          "username": {
-            "type": "string",
-            "nullable": true
-          },
-          "password": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "LoginResponse": {
         "type": "object",
         "properties": {
@@ -838,26 +939,20 @@
         },
         "additionalProperties": false
       },
-      "LoginResponseApiResponse": {
+      "Phone": {
         "type": "object",
         "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/LoginResponse"
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ApiError"
-            },
+          "number": {
+            "type": "string",
             "nullable": true
+          },
+          "isPrimary": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
       },
-      "Phone": {
+      "PhoneRequest": {
         "type": "object",
         "properties": {
           "number": {
@@ -877,24 +972,6 @@
             "type": "string",
             "format": "uuid",
             "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "PostRequest": {
-        "type": "object",
-        "properties": {
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "image": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -922,48 +999,6 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/PostLike"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "PostResponseApiResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/PostResponse"
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ApiError"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "PostResponseIReadOnlyListApiResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PostResponse"
-            },
-            "nullable": true
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ApiError"
             },
             "nullable": true
           }
@@ -998,24 +1033,6 @@
         },
         "additionalProperties": false
       },
-      "RegisterRequest": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "nullable": true
-          },
-          "username": {
-            "type": "string",
-            "nullable": true
-          },
-          "password": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "SocialMedia": {
         "type": "object",
         "properties": {
@@ -1029,60 +1046,15 @@
         },
         "additionalProperties": false
       },
-      "StoreRequest": {
+      "SocialMediaRequest": {
         "type": "object",
         "properties": {
-          "ownerUserId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
+          "link": {
             "type": "string",
             "nullable": true
           },
-          "responsibleName": {
-            "type": "string",
-            "nullable": true
-          },
-          "averagePrice": {
-            "type": "number",
-            "format": "double"
-          },
-          "localType": {
-            "$ref": "#/components/schemas/ELocalType"
-          },
-          "productTypeKeys": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "averageQuantity": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "address": {
-            "$ref": "#/components/schemas/AddressRequest"
-          },
-          "socialMedia": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SocialMedia"
-            },
-            "nullable": true
-          },
-          "phones": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Phone"
-            },
-            "nullable": true
+          "platform": {
+            "$ref": "#/components/schemas/ESocialMediaPlatform"
           }
         },
         "additionalProperties": false
@@ -1152,48 +1124,6 @@
         },
         "additionalProperties": false
       },
-      "StoreResponseApiResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/StoreResponse"
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ApiError"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "StoreResponseIReadOnlyListApiResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/StoreResponse"
-            },
-            "nullable": true
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ApiError"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "StoreReview": {
         "type": "object",
         "properties": {
@@ -1241,28 +1171,6 @@
         },
         "additionalProperties": false
       },
-      "StoreReviewRequest": {
-        "type": "object",
-        "properties": {
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "storeId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "rating": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "comment": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "StoreReviewResponse": {
         "type": "object",
         "properties": {
@@ -1289,48 +1197,6 @@
         },
         "additionalProperties": false
       },
-      "StoreReviewResponseApiResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/StoreReviewResponse"
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ApiError"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "StoreReviewResponseListApiResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/StoreReviewResponse"
-            },
-            "nullable": true
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ApiError"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "UserResponse": {
         "type": "object",
         "properties": {
@@ -1344,25 +1210,6 @@
           },
           "email": {
             "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "UserResponseApiResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/UserResponse"
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ApiError"
-            },
             "nullable": true
           }
         },

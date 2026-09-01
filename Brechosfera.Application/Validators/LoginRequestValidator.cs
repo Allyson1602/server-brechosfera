@@ -3,7 +3,7 @@ using Brechosfera.Application.Requests;
 
 namespace Brechosfera.Application.Validators;
 
-public class LoginRequestValidator : AbstractValidator<LoginRequest>
+public sealed class LoginRequestValidator : AbstractValidator<CreateLoginRequest>
 {
     public LoginRequestValidator()
     {

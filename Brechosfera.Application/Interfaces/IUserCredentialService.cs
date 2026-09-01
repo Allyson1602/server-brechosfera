@@ -5,6 +5,6 @@ namespace Brechosfera.Application.Interfaces;
 
 public interface IUserCredentialService
 {
-    Task<UserResponse?> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken = default);
-    Task<LoginResponse?> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default);
+    Task<UserResponse?> RegisterAsync(CreateRegisterRequest request, CancellationToken cancellationToken = default);
+    Task<LoginResponse?> LoginAsync(CreateLoginRequest request, CancellationToken cancellationToken = default);
 }

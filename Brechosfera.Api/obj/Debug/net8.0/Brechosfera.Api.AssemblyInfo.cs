@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Brechosfera.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0a1e527ad5e531ada8fdc6784de1e3c4fb954dd6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ffa259d0a0f3a239619410cf8f44bee27daa3197")]
 [assembly: System.Reflection.AssemblyProductAttribute("Brechosfera.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Brechosfera.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

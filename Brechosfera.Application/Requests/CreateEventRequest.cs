@@ -1,6 +1,6 @@
 ﻿namespace Brechosfera.Application.Requests;
 
-public sealed record EventRequest(
+public sealed record CreateEventRequest(
     string Banner,
     string Name,
     string Description,

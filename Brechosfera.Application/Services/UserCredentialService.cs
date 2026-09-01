@@ -28,7 +28,7 @@ public class UserCredentialService : BaseService, IUserCredentialService
         _jwtProvider = jwtProvider;
     }
 
-    public async Task<UserResponse?> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken = default)
+    public async Task<UserResponse?> RegisterAsync(CreateRegisterRequest request, CancellationToken cancellationToken = default)
     {
         Password password = Password.Create(request.Password);
 
@@ -65,7 +65,7 @@ public class UserCredentialService : BaseService, IUserCredentialService
         return new UserResponse(newUser.Id, newUser.Username, newUser.Email);
     }
 
-    public async Task<LoginResponse?> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default)
+    public async Task<LoginResponse?> LoginAsync(CreateLoginRequest request, CancellationToken cancellationToken = default)
     {
         var user = await _repository.GetByLoginAsync(request.Username, cancellationToken);
 

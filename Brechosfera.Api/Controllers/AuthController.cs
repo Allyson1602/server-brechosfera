@@ -1,5 +1,4 @@
-﻿using Brechosfera.Application.Common;
-using Brechosfera.Application.Interfaces;
+﻿using Brechosfera.Application.Interfaces;
 using Brechosfera.Application.Notifications;
 using Brechosfera.Application.Requests;
 using Brechosfera.Application.Responses;
@@ -21,9 +20,23 @@ public class AuthController : ApiController
 
     [AllowAnonymous]
     [HttpPost("login")]
-    public async Task<ActionResult<ApiResponse<LoginResponse>>> Login([FromBody] LoginRequest request)
+    public async Task<ActionResult<LoginResponse>> Login([FromBody] CreateLoginRequest request)
     {
         var token = await _userService.LoginAsync(request);
-        return CustomResponse(token);
+
+        if (!IsValidOperation())
+        {
+            var message = _notifier
+                .GetNotifications()
+                .FirstOrDefault()?.Message;
+
+            return Problem(
+                statusCode: StatusCodes.Status401Unauthorized,
+                title: "Falha na autenticação",
+                detail: message
+            );
+        }
+
+        return Ok(token);
     }
 }

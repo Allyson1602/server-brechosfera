@@ -1,5 +1,4 @@
-﻿using Brechosfera.Application.Common;
-using Brechosfera.Application.Interfaces;
+﻿using Brechosfera.Application.Interfaces;
 using Brechosfera.Application.Notifications;
 using Brechosfera.Application.Requests;
 using Brechosfera.Application.Responses;
@@ -22,29 +21,38 @@ public class StoreReviewController : ApiController
     }
 
     [HttpGet]
-    public async Task<ActionResult<ApiResponse<List<StoreReviewResponse>>>> ListStoreReviewByStoreId(
+    public async Task<ActionResult<List<StoreReviewResponse>>> ListStoreReviewByStoreId(
         [FromQuery] Guid storeId,
         CancellationToken cancellationToken
     ) {
         var storeReviews = await _storeReviewService.ListStoreReviewByStoreIdAsync(storeId, cancellationToken);
 
-        return CustomResponse(storeReviews);
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return Ok(storeReviews);
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<ApiResponse<StoreReviewResponse>>> GetStoreReviewById(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult<StoreReviewResponse>> GetStoreReviewById(Guid id, CancellationToken cancellationToken)
     {
         var storeReview = await _storeReviewService.GetStoreReviewByIdAsync(id, cancellationToken);
 
-        return CustomResponse(storeReview);
+        if (storeReview is null)
+            return NotFound();
+
+        return Ok(storeReview);
     }
 
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<ApiResponse<StoreReviewResponse>>> AddStoreReview([FromBody] StoreReviewRequest request, CancellationToken cancellationToken)
+    public async Task<ActionResult<StoreReviewResponse>> AddStoreReview([FromBody] CreateStoreReviewRequest request, CancellationToken cancellationToken)
     {
         var storeReview = await _storeReviewService.AddStoreReviewAsync(request, cancellationToken);
 
-        return CustomCreate($"/api/store-review/{storeReview?.Id}", storeReview);
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return Created($"/api/store-review/{storeReview?.Id}", storeReview);
     }
 }

@@ -6,10 +6,10 @@ namespace Brechosfera.Domain.Entities;
 
 public class Event : Entity, IAggregateRoot
 {
-    public string Banner { get; private set; }
-    public string Name { get; private set; }
-    public string Description { get; private set; }
-    public string OrganizerName { get; private set; }
+    public string Banner { get; private set; } = string.Empty;
+    public string Name { get; private set; } = string.Empty;
+    public string Description { get; private set; } = string.Empty;
+    public string OrganizerName { get; private set; } = string.Empty;
     public Address Address { get; private set; }
     public DateTimeOffset StartDate { get; private set; }
     public DateTimeOffset EndDate { get; private set; }

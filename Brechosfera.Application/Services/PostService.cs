@@ -41,7 +41,7 @@ public class PostService : BaseService, IPostService
         return post.ToResponse();
     }
 
-    public async Task<PostResponse?> CreatePostAsync(PostRequest request, CancellationToken cancellationToken)
+    public async Task<PostResponse?> CreatePostAsync(CreatePostRequest request, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetByIdAsync(request.UserId, cancellationToken);
 

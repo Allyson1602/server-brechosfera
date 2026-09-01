@@ -7,5 +7,5 @@ public interface IEventService
 {
     public Task<IReadOnlyList<EventResponse>> ListEventAsync(CancellationToken cancellationToken);
     public Task<IReadOnlyList<EventResponse>> ListEventByStoreIdAsync(Guid storeId, CancellationToken cancellationToken);
-    public Task<EventResponse?> CreateEventAsync(EventRequest request, CancellationToken cancellationToken);
+    public Task<EventResponse?> CreateEventAsync(CreateEventRequest request, CancellationToken cancellationToken);
 }

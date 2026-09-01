@@ -9,13 +9,13 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "Brechosfera.Application.Requests.LoginRequest",
+        "Type": "Brechosfera.Application.Requests.CreateLoginRequest",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "Brechosfera.Application.Common.ApiResponse\u00601[[Brechosfera.Application.Responses.LoginResponse, Brechosfera.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "Brechosfera.Application.Responses.LoginResponse",
         "MediaTypes": [
           "application/json"
         ],
@@ -33,7 +33,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "Brechosfera.Application.Common.ApiResponse\u00601[[System.Collections.Generic.IReadOnlyList\u00601[[Brechosfera.Application.Responses.EventResponse, Brechosfera.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "System.Collections.Generic.IReadOnlyList\u00601[[Brechosfera.Application.Responses.EventResponse, Brechosfera.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -53,13 +53,13 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "Brechosfera.Application.Requests.EventRequest",
+        "Type": "Brechosfera.Application.Requests.CreateEventRequest",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "Brechosfera.Application.Common.ApiResponse\u00601[[Brechosfera.Application.Responses.EventResponse, Brechosfera.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "Brechosfera.Application.Responses.EventResponse",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -85,7 +85,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Brechosfera.Application.Common.ApiResponse\u00601[[System.Collections.Generic.IReadOnlyList\u00601[[Brechosfera.Application.Responses.EventResponse, Brechosfera.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "System.Collections.Generic.IReadOnlyList\u00601[[Brechosfera.Application.Responses.EventResponse, Brechosfera.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -105,7 +105,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "Brechosfera.Application.Common.ApiResponse\u00601[[System.Collections.Generic.IReadOnlyList\u00601[[Brechosfera.Application.Responses.PostResponse, Brechosfera.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "System.Collections.Generic.IReadOnlyList\u00601[[Brechosfera.Application.Responses.PostResponse, Brechosfera.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -125,13 +125,13 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "Brechosfera.Application.Requests.PostRequest",
+        "Type": "Brechosfera.Application.Requests.CreatePostRequest",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "Brechosfera.Application.Common.ApiResponse\u00601[[Brechosfera.Application.Responses.PostResponse, Brechosfera.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "Brechosfera.Application.Responses.PostResponse",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -157,7 +157,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Brechosfera.Application.Common.ApiResponse\u00601[[Brechosfera.Application.Responses.PostResponse, Brechosfera.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "Brechosfera.Application.Responses.PostResponse",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -177,7 +177,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "Brechosfera.Application.Common.ApiResponse\u00601[[System.Collections.Generic.IReadOnlyList\u00601[[Brechosfera.Application.Responses.StoreResponse, Brechosfera.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "System.Collections.Generic.IReadOnlyList\u00601[[Brechosfera.Application.Responses.StoreResponse, Brechosfera.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -197,13 +197,13 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "Brechosfera.Application.Requests.StoreRequest",
+        "Type": "Brechosfera.Application.Requests.CreateStoreRequest",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "Brechosfera.Application.Common.ApiResponse\u00601[[Brechosfera.Application.Responses.StoreResponse, Brechosfera.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "Brechosfera.Application.Responses.StoreResponse",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -229,7 +229,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Brechosfera.Application.Common.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[Brechosfera.Application.Responses.StoreReviewResponse, Brechosfera.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "System.Collections.Generic.List\u00601[[Brechosfera.Application.Responses.StoreReviewResponse, Brechosfera.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -249,13 +249,13 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "Brechosfera.Application.Requests.StoreReviewRequest",
+        "Type": "Brechosfera.Application.Requests.CreateStoreReviewRequest",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "Brechosfera.Application.Common.ApiResponse\u00601[[Brechosfera.Application.Responses.StoreReviewResponse, Brechosfera.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "Brechosfera.Application.Responses.StoreReviewResponse",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -281,7 +281,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Brechosfera.Application.Common.ApiResponse\u00601[[Brechosfera.Application.Responses.StoreReviewResponse, Brechosfera.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "Brechosfera.Application.Responses.StoreReviewResponse",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -307,7 +307,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Brechosfera.Application.Common.ApiResponse\u00601[[Brechosfera.Application.Responses.StoreResponse, Brechosfera.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "Brechosfera.Application.Responses.StoreResponse",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -327,13 +327,13 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "Brechosfera.Application.Requests.RegisterRequest",
+        "Type": "Brechosfera.Application.Requests.CreateRegisterRequest",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "Brechosfera.Application.Common.ApiResponse\u00601[[Brechosfera.Application.Responses.UserResponse, Brechosfera.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "Brechosfera.Application.Responses.UserResponse",
         "MediaTypes": [
           "text/plain",
           "application/json",

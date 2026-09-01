@@ -1,5 +1,4 @@
-﻿using Brechosfera.Application.Common;
-using Brechosfera.Application.Interfaces;
+﻿using Brechosfera.Application.Interfaces;
 using Brechosfera.Application.Notifications;
 using Brechosfera.Application.Requests;
 using Brechosfera.Application.Responses;
@@ -20,27 +19,33 @@ public class StoreController : ApiController
     }
 
     [HttpGet]
-    public async Task<ActionResult<ApiResponse<IReadOnlyList<StoreResponse>>>> ListStore(CancellationToken cancellationToken)
+    public async Task<ActionResult<IReadOnlyList<StoreResponse>>> ListStore(CancellationToken cancellationToken)
     {
         var result = await _storeService.ListStoreAsync(cancellationToken);
 
-        return CustomResponse(result);
+        return Ok(result);
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<ApiResponse<StoreResponse>>> GetStoreById(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult<StoreResponse>> GetStoreById(Guid id, CancellationToken cancellationToken)
     {
         var result = await _storeService.GetStoreByIdAsync(id, cancellationToken);
 
-        return CustomResponse(result);
+        if (result is null)
+            return NotFound();
+
+        return Ok(result);
     }
 
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<ApiResponse<StoreResponse>>> CreateStore(StoreRequest request, CancellationToken cancellationToken)
+    public async Task<ActionResult<StoreResponse>> CreateStore(CreateStoreRequest request, CancellationToken cancellationToken)
     {
         var result = await _storeService.CreateStoreAsync(request, cancellationToken);
 
-        return CustomCreate($"/api/store/{result?.Id}", result);
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return Created($"/api/store/{result?.Id}", result);
     }
 }

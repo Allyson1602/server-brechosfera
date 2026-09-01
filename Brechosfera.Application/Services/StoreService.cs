@@ -26,6 +26,30 @@ public class StoreService : BaseService, IStoreService
         _productTypeRepository = productTypeRepository;
     }
 
+    public async Task<StoreResponse?> UpdateStoreAsync(Guid id, UpdateStoreRequest request, CancellationToken cancellationToken)
+    {
+        Store? store = await _repository.GetByIdAsync(id, cancellationToken);
+
+        if (store is null)
+        {
+
+            Notify("STORE_NOT_FOUND", "A loja não foi encontrada.");
+            return null;
+        }
+
+        store.UpdateDetails(
+            request.Name,
+            request.AveragePrice,
+            request.LocalType,
+            request.AverageQuantity,
+            request.Description
+        );
+
+        var success = await CommitAsync(cancellationToken);
+
+        return success ? store.ToResponse() : null;
+    }
+
     public async Task<IReadOnlyList<StoreResponse>> ListStoreAsync(CancellationToken cancellationToken)
     {
         IReadOnlyList<Store> stores = await _repository.GetAllAsync(cancellationToken);
@@ -37,13 +61,13 @@ public class StoreService : BaseService, IStoreService
     {
         Store? store = await _repository.GetStoreByIdAsync(id, cancellationToken);
 
-        if (store == null)
+        if (store is null)
             return null;
 
         return store.ToResponse();
     }
 
-    public async Task<StoreResponse?> CreateStoreAsync(StoreRequest request, CancellationToken cancellationToken)
+    public async Task<StoreResponse?> CreateStoreAsync(CreateStoreRequest request, CancellationToken cancellationToken)
     {
         List<ProductType> productTypes = await _productTypeRepository.ListProductTypeByKeyAsync(request.ProductTypeKeys, cancellationToken);
         Address? newAddress = null;
@@ -56,16 +80,19 @@ public class StoreService : BaseService, IStoreService
             return null;
         }
 
+        var newSocialMedia = request.SocialMedia?.Select(x => new SocialMedia(x.Link, x.Platform)).ToList();
+        var newPhones = request.Phones?.Select(x => new Phone(x.Number, x.IsPrimary)).ToList();
+
         Store newStore = new Store(
             request.OwnerUserId,
             request.Name,
             request.AveragePrice,
-            (ELocalType)request.LocalType,
+            request.LocalType,
             productTypes,
             request.Description,
             request.AverageQuantity,
-            request.socialMedia,
-            request.phones
+            newSocialMedia,
+            newPhones
         );
 
         if (request.Address is not null)

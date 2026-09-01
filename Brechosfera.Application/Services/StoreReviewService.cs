@@ -45,7 +45,7 @@ public class StoreReviewService : BaseService, IStoreReviewService
         return storeReview.ToResponse();
     }
 
-    public async Task<StoreReviewResponse?> AddStoreReviewAsync(StoreReviewRequest request, CancellationToken cancellationToken)
+    public async Task<StoreReviewResponse?> AddStoreReviewAsync(CreateStoreReviewRequest request, CancellationToken cancellationToken)
     {
         var rating = Rating.Create(request.Rating);
 

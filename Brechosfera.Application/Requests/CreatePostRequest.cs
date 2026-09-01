@@ -1,6 +1,6 @@
 ﻿namespace Brechosfera.Application.Requests;
 
-public record PostRequest(
+public record CreatePostRequest(
     Guid UserId,
     string? Image,
     string Description

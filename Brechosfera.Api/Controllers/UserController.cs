@@ -1,9 +1,7 @@
-﻿using Brechosfera.Application.Common;
-using Brechosfera.Application.Interfaces;
+﻿using Brechosfera.Application.Interfaces;
 using Brechosfera.Application.Notifications;
 using Brechosfera.Application.Requests;
 using Brechosfera.Application.Responses;
-using Brechosfera.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,9 +20,13 @@ public class UserController : ApiController
 
     [AllowAnonymous]
     [HttpPost("register")]
-    public async Task<ActionResult<ApiResponse<UserResponse>>> Register([FromBody] RegisterRequest request)
+    public async Task<ActionResult<UserResponse>> Register([FromBody] CreateRegisterRequest request)
     {
         var result = await _userService.RegisterAsync(request);
-        return CustomResponse(result);
+
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return Ok(result);
     }
 }

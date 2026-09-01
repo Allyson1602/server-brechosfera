@@ -1,5 +1,4 @@
-﻿using Brechosfera.Application.Common;
-using Brechosfera.Application.Interfaces;
+﻿using Brechosfera.Application.Interfaces;
 using Brechosfera.Application.Notifications;
 using Brechosfera.Application.Requests;
 using Brechosfera.Application.Responses;
@@ -20,27 +19,33 @@ public class EventController : ApiController
     }
 
     [HttpGet]
-    public async Task<ActionResult<ApiResponse<IReadOnlyList<EventResponse>>>> ListEvent(CancellationToken cancellationToken)
+    public async Task<ActionResult<IReadOnlyList<EventResponse>>> ListEvent(CancellationToken cancellationToken)
     {
         var result = await _eventService.ListEventAsync(cancellationToken);
 
-        return CustomResponse(result);
+        return Ok(result);
     }
 
     [HttpGet("store/{storeId:guid}")]
-    public async Task<ActionResult<ApiResponse<IReadOnlyList<EventResponse>>>> ListEventByStoreId(Guid storeId, CancellationToken cancellationToken)
+    public async Task<ActionResult<IReadOnlyList<EventResponse>>> ListEventByStoreId(Guid storeId, CancellationToken cancellationToken)
     {
         var result = await _eventService.ListEventByStoreIdAsync(storeId, cancellationToken);
 
-        return CustomResponse(result);
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return Ok(result);
     }
 
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<ApiResponse<EventResponse>>> CreateEvent(EventRequest request, CancellationToken cancellationToken)
+    public async Task<ActionResult<EventResponse>> CreateEvent(CreateEventRequest request, CancellationToken cancellationToken)
     {
         var result = await _eventService.CreateEventAsync(request, cancellationToken);
 
-        return CustomCreate($"/api/event/{result?.Id}", result);
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return Created($"/api/event/{result?.Id}", result);
     }
 }

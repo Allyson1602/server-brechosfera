@@ -1,5 +1,4 @@
-﻿using Brechosfera.Application.Common;
-using Brechosfera.Application.Notifications;
+﻿using Brechosfera.Application.Notifications;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Brechosfera.Api.Controllers;
@@ -7,7 +6,7 @@ namespace Brechosfera.Api.Controllers;
 [ApiController]
 public abstract class ApiController : ControllerBase
 {
-    private readonly INotifier _notifier;
+    protected readonly INotifier _notifier;
 
     protected ApiController(INotifier notifier)
     {
@@ -16,36 +15,16 @@ public abstract class ApiController : ControllerBase
 
     protected bool IsValidOperation() => !_notifier.HasNotifications();
 
-    protected ActionResult<ApiResponse<T>> CustomError<T>()
+    protected ActionResult NotificationProblem()
     {
-        return BadRequest(new ApiResponse<T>(
-            Success: false,
-            Data: default,
-            Errors: _notifier.GetNotifications().Select(x => new ApiError(x.Code, x.Message)).ToArray()
-        ));
-    }
+        foreach (var notification in _notifier.GetNotifications())
+        {
+            ModelState.AddModelError(
+                notification.Code,
+                notification.Message
+            );
+        }
 
-    protected ActionResult<ApiResponse<T>> CustomResponse<T>(T? result = default)
-    {
-        if (!IsValidOperation())
-            return CustomError<T>();
-
-        return Ok(ApiResponse<T>.Ok(result));
-    }
-
-    protected ActionResult<ApiResponse<T>> CustomCreate<T>(string uri, T? result)
-    {
-        if (!IsValidOperation())
-            return CustomError<T>();
-
-        return Created(uri, ApiResponse<T>.Ok(result));
-    }
-
-    protected ActionResult<ApiResponse<object>> CustomNoContent()
-    {
-        if (!IsValidOperation())
-            return CustomError<object>();
-
-        return NoContent();
+        return ValidationProblem(ModelState);
     }
 }

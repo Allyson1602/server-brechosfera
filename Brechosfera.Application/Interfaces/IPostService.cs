@@ -7,5 +7,5 @@ public interface IPostService
 {
     public Task<IReadOnlyList<PostResponse>> ListPostAsync(CancellationToken cancellationToken);
     public Task<PostResponse?> GetPostByIdAsync(Guid id, CancellationToken cancellationToken);
-    public Task<PostResponse?> CreatePostAsync(PostRequest request, CancellationToken cancellationToken);
+    public Task<PostResponse?> CreatePostAsync(CreatePostRequest request, CancellationToken cancellationToken);
 }

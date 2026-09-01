@@ -51,7 +51,7 @@ public class EventService : BaseService, IEventService
         return events.ToResponseList();
     }
 
-    public async Task<EventResponse?> CreateEventAsync(EventRequest request, CancellationToken cancellationToken)
+    public async Task<EventResponse?> CreateEventAsync(CreateEventRequest request, CancellationToken cancellationToken)
     {
         var store = await _storeRepository.GetByIdAsync(request.ResponsibleStoreId);
 

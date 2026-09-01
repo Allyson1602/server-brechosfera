@@ -46,6 +46,7 @@ public class Store : Entity, IAggregateRoot
         Guard.AgainstEmptyList(productTypes, "PRODUCT_TYPE_EMPTY_LIST", "Informe os tipos de produto.");
         Guard.AgainstNegativeOrZero(averageQuantity, "STORE_AVERAGE_QUANTITY_MORE_ZERO", "Quantidade média deve ser maior que zero.");
         Guard.AgainstNegativeOrZero(averagePrice, "STORE_AVERAGE_PRICE_MORE_ZERO", "Preço médio deve ser  maior que zero.");
+        Guard.AgainstInvalidEnum(localType, "STORE_LOCAL_TYPE_INVALID", "O tipo de local é inválido.");
 
         Name = name;
         Description = description;
@@ -64,6 +65,26 @@ public class Store : Entity, IAggregateRoot
         {
             AddListPhone(phones);
         }
+    }
+
+    public void UpdateDetails(
+        string name,
+        decimal averagePrice,
+        ELocalType localType,
+        int? averageQuantity,
+        string? description
+    )
+    {
+        Guard.AgainstNegativeOrZero(averagePrice, "STORE_AVERAGE_PRICE_MORE_ZERO", "Preço médio deve ser  maior que zero.");
+        Guard.AgainstNegativeOrZero(averageQuantity, "STORE_AVERAGE_QUANTITY_MORE_ZERO", "Quantidade média deve ser maior que zero.");
+        Guard.AgainstInvalidEnum(localType, "STORE_LOCAL_TYPE_INVALID", "O tipo de local é inválido.");
+        Guard.AgainstNullOrWhiteSpace(name, "STORE_NAME_INVALID", "Nome da loja inválida.");
+
+        Name = name;
+        AveragePrice = averagePrice;
+        LocalType = localType;
+        AverageQuantity = averageQuantity;
+        Description = description;
     }
 
     public void AddListProductType(IEnumerable<ProductType> productTypes)

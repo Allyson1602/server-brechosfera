@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Brechosfera.Application.Validators;
 
-public class RegisterRequestValidator : AbstractValidator<RegisterRequest>
+public sealed class RegisterRequestValidator : AbstractValidator<CreateRegisterRequest>
 {
     public RegisterRequestValidator()
     {

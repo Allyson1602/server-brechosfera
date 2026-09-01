@@ -1,5 +1,4 @@
-﻿using Brechosfera.Application.Common;
-using Brechosfera.Application.Interfaces;
+﻿using Brechosfera.Application.Interfaces;
 using Brechosfera.Application.Notifications;
 using Brechosfera.Application.Requests;
 using Brechosfera.Application.Responses;
@@ -20,27 +19,33 @@ public class PostController : ApiController
     }
 
     [HttpGet]
-    public async Task<ActionResult<ApiResponse<IReadOnlyList<PostResponse>>>> ListPost(CancellationToken cancellationToken)
+    public async Task<ActionResult<IReadOnlyList<PostResponse>>> ListPost(CancellationToken cancellationToken)
     {
         var result = await _postService.ListPostAsync(cancellationToken);
 
-        return CustomResponse(result);
+        return Ok(result);
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<ApiResponse<PostResponse>>> GetPostById(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult<PostResponse>> GetPostById(Guid id, CancellationToken cancellationToken)
     {
         var result = await _postService.GetPostByIdAsync(id, cancellationToken);
 
-        return CustomResponse(result);
+        if (result is null)
+            return NotFound();
+
+        return Ok(result);
     }
 
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<ApiResponse<PostResponse>>> CreatePost(PostRequest request, CancellationToken cancellationToken)
+    public async Task<ActionResult<PostResponse>> CreatePost(CreatePostRequest request, CancellationToken cancellationToken)
     {
         var result = await _postService.CreatePostAsync(request, cancellationToken);
 
-        return CustomCreate($"/api/post/{result?.Id}", result);
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return Created($"/api/post/{result?.Id}", result);
     }
 }
