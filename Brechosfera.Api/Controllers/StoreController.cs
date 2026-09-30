@@ -18,6 +18,89 @@ public class StoreController : ApiController
         _storeService = storeService;
     }
 
+    [Authorize]
+    [HttpDelete("{id:guid}/social-media")]
+    public async Task<ActionResult> RemoveSocialMedia(Guid id, [FromBody]RemoveSocialMediaRequest request, CancellationToken cancellationToken)
+    {
+        await _storeService.RemoveSocialMediaAsync(id, request, cancellationToken);
+
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return NoContent();
+    }
+
+    [Authorize]
+    [HttpPost("{id:guid}/social-media")]
+    public async Task<ActionResult> AddSocialMedia(Guid id, [FromBody]SocialMediaRequest request, CancellationToken cancellationToken)
+    {
+        await _storeService.AddSocialMediaAsync(id, request, cancellationToken);
+
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return NoContent();
+    }
+
+    [Authorize]
+    [HttpDelete("{id:guid}/phone")]
+    public async Task<ActionResult> RemovePhone(Guid id, [FromBody]RemovePhoneRequest request, CancellationToken cancellationToken)
+    {
+        await _storeService.RemovePhoneAsync(id, request, cancellationToken);
+
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return NoContent();
+    }
+
+    [Authorize]
+    [HttpPost("{id:guid}/phone")]
+    public async Task<ActionResult> AddPhone(Guid id, [FromBody]PhoneRequest request, CancellationToken cancellationToken)
+    {
+        await _storeService.AddPhoneAsync(id, request, cancellationToken);
+
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return NoContent();
+    }
+
+    [Authorize]
+    [HttpPut("{id:guid}/address")]
+    public async Task<ActionResult> UpdateAddress(Guid id, [FromBody]AddressRequest request, CancellationToken cancellationToken)
+    {
+        await _storeService.UpdateAddressAsync(id, request, cancellationToken);
+
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return NoContent();
+    }
+
+    [Authorize]
+    [HttpPut("{id:guid}/product-types")]
+    public async Task<ActionResult> UpdateProductTypes(Guid id, [FromBody]ReplaceStoreProductTypesRequest request, CancellationToken cancellationToken)
+    {
+        await _storeService.UpdateProductTypesAsync(id, request, cancellationToken);
+
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return NoContent();
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<ActionResult<StoreResponse>> UpdateStore(Guid id, [FromBody]UpdateStoreRequest request, CancellationToken cancellationToken)
+    {
+        var result = await _storeService.UpdateStoreAsync(id, request, cancellationToken);
+
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return Ok(result);
+    }
+
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<StoreResponse>>> ListStore(CancellationToken cancellationToken)
     {

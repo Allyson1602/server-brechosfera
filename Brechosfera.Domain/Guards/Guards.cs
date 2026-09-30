@@ -63,6 +63,12 @@ public static class Guard
             throw new DomainException(code, message);
     }
 
+    public static void AgainstEmptyList<T>(IEnumerable<T>? collection, string code, string message)
+    {
+        if (collection is null || !collection.Any())
+            throw new DomainException(code, message);
+    }
+
     public static void AgainstRange(string value, int min, int max, string code, string message)
     {
         if (value.Length < min || value.Length > max)
@@ -78,6 +84,12 @@ public static class Guard
     public static void AgainstNullMaxLength(string? value, int max, string code, string message)
     {
         if (value is null || value.Length > max)
+            throw new DomainException(code, message);
+    }
+
+    public static void AgainstMinEqualCount(int currentCount, int min, string code, string message)
+    {
+        if (currentCount <= min)
             throw new DomainException(code, message);
     }
 

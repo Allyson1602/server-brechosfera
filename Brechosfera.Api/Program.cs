@@ -1,3 +1,4 @@
+using Brechosfera.Api.Exceptions;
 using Brechosfera.Application.Interfaces;
 using Brechosfera.Application.Notifications;
 using Brechosfera.Application.Services;
@@ -69,6 +70,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddDatabaseConfiguration(builder.Configuration);
 builder.Services.AddSecurityConfiguration();
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddScoped<INotifier, Notifier>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
@@ -77,6 +80,7 @@ builder.Services.AddScoped<IStoreService, StoreService>();
 builder.Services.AddScoped<IStoreReviewService, StoreReviewService>();
 builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
 
@@ -90,6 +94,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddExceptionHandler<DomainExceptionHandler>();
 builder.Services.AddProblemDetails();
 
 var app = builder.Build();

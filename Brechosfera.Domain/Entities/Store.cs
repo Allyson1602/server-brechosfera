@@ -54,7 +54,7 @@ public class Store : Entity, IAggregateRoot
         AverageQuantity = averageQuantity;
         AveragePrice = averagePrice;
         LocalType = localType;
-        AddListProductType(productTypes);
+        AddProductTypes(productTypes);
 
         if (socialMedia is not null)
         {
@@ -87,14 +87,45 @@ public class Store : Entity, IAggregateRoot
         Description = description;
     }
 
-    public void AddListProductType(IEnumerable<ProductType> productTypes)
+    public void ReplaceProductTypes(IEnumerable<ProductType> productTypes)
     {
+        Guard.AgainstEmptyList(productTypes, "PRODUCT_TYPE_EMPTY_LIST", "Informe os tipos de produto.");
+
+        _productTypes.Clear();
+        AddProductTypes(productTypes);
+    }
+
+    public void AddProductType(ProductType newProductType)
+    {
+        Guard.AgainstNull(newProductType, "PRODUCT_TYPE_EMPTY", "O tipo do produto não pode ser nula.");
+
+        if (_productTypes.Any(x => x.Id == newProductType.Id))
+            return;
+
+        _productTypes.Add(newProductType);
+    }
+
+    public void AddProductTypes(IEnumerable<ProductType> productTypes)
+    {
+        Guard.AgainstEmptyList(productTypes, "PRODUCT_TYPE_EMPTY_LIST", "Informe os tipos de produto.");
+
+        var existingProductTypeIds = ProductTypes
+            .Select(x => x.Id)
+            .ToHashSet();
+
         foreach (ProductType productTypeItem in productTypes)
         {
-            Guard.AgainstNull(productTypeItem, "PRODUCT_TYPE_EMPTY", "O tipo do produto não pode ser nula.");
+            if (existingProductTypeIds.Contains(productTypeItem.Id))
+                continue;
 
-            _productTypes.Add(productTypeItem);
+            AddProductType(productTypeItem);
+            existingProductTypeIds.Add(productTypeItem.Id);
         }
+    }
+
+    public bool CheckIsOwnedBy(Guid userId)
+    {
+        return OwnerUserId == userId;
     }
 
     public void UpdatePrimaryPhone(string phoneNumber)
@@ -120,15 +151,37 @@ public class Store : Entity, IAggregateRoot
         _phones.Add(phoneToPromote with { IsPrimary = true });
     }
 
+    public void RemoveSocialMedia(string link)
+    {
+        Guard.AgainstNullOrWhiteSpace(link, "SOCIAL_MEDIA_EMPTY", "A rede social não pode ser nula.");
+        Guard.AgainstMinEqualCount(_socialMedia.Count, 1, "SOCIAL_MEDIA_MIN", "Tenha pelo menos uma rede social.");
+
+        var socialMedia = _socialMedia.FirstOrDefault(s => s.Link == link);
+
+        Guard.AgainstNull(
+            socialMedia,
+            "SOCIAL_MEDIA_NOT_FOUND",
+            "A rede social não foi encontrada."
+        );
+
+        if (socialMedia is not null)
+            _socialMedia.Remove(socialMedia);
+    }
+
+    public void AddSocialMedia(SocialMedia socialMedia)
+    {
+        Guard.AgainstNull(socialMedia, "SOCIAL_MEDIA_EMPTY", "A rede social não pode ser nula.");
+
+        _socialMedia.Add(socialMedia);
+    }
+
     public void AddListSocialMedia(IEnumerable<SocialMedia> socialMedia)
     {
         Guard.AgainstNull(socialMedia, "SOCIAL_MEDIA_EMPTY_LIST", "A lista de redes sociais não pode ser nula.");
 
         foreach (SocialMedia socialMediaItem in socialMedia)
         {
-            Guard.AgainstNull(socialMediaItem, "SOCIAL_MEDIA_EMPTY", "A rede social não pode ser nula.");
-
-            _socialMedia.Add(socialMediaItem);
+            AddSocialMedia(socialMediaItem);
         }
     }
 
@@ -137,9 +190,6 @@ public class Store : Entity, IAggregateRoot
         Guard.AgainstNull(phones, "PHONE_EMPTY_LIST", "A lista de celulares não pode ser nula.");
 
         var phonesToAdd = phones.ToList();
-        int newPhonesCount = _phones.Count + phonesToAdd.Count;
-
-        Guard.AgainstMaxCount(newPhonesCount, MaxPhonesLimit, "STORE_PHONE_LIMIT_EXCEEDED", $"A loja já atingiu o limite de {MaxPhonesLimit} celulares.");
 
         var primaryPhonesCount = _phones.Count(x => x.IsPrimary) + phonesToAdd.Count(x => x.IsPrimary);
 
@@ -147,10 +197,56 @@ public class Store : Entity, IAggregateRoot
 
         foreach (Phone phone in phonesToAdd)
         {
-            Guard.AgainstNull(phone, "PHONE_EMPTY", "O celular não pode ser nulo.");
-
-            _phones.Add(phone);
+            AddPhone(phone);
         }
+    }
+
+    public void RemovePhone(string phoneNumber)
+    {
+        Guard.AgainstNullOrWhiteSpace(
+            phoneNumber,
+            "PHONE_EMPTY",
+            "O número do celular é obrigatório."
+        );
+
+        var phone = _phones.FirstOrDefault(p => p.Number == phoneNumber);
+
+        Guard.AgainstNull(
+            phone,
+            "PHONE_NOT_FOUND",
+            "O celular não foi encontrado."
+        );
+
+        if (phone is not null)
+        {
+            var wasPrimary = phone.IsPrimary;
+
+            _phones.Remove(phone);
+
+            if (wasPrimary && _phones.Count > 0)
+               _phones[0].IsPrimary = true;
+        }
+    }
+
+    public void AddPhone(Phone phone)
+    {
+        Guard.AgainstNull(phone, "PHONE_EMPTY", "O celular não pode ser nulo.");
+        Guard.AgainstMaxCount(_phones.Count + 1, MaxPhonesLimit, "STORE_PHONE_LIMIT_EXCEEDED", $"A loja já atingiu o limite de {MaxPhonesLimit} celulares.");
+
+        if (_phones.Count == 0 || phone.IsPrimary)
+            SetPrimaryPhone(phone);
+
+        _phones.Add(phone);
+    }
+
+    public void SetPrimaryPhone(Phone phone)
+    {
+        foreach (var existingPhone in _phones)
+        {
+            existingPhone.IsPrimary = false;
+        }
+
+        phone.IsPrimary = true;
     }
 
     public void AddReview(StoreReview review)

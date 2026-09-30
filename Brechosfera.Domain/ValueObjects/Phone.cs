@@ -5,7 +5,7 @@ namespace Brechosfera.Domain.ValueObjects;
 public sealed record Phone
 {
     public string Number { get; init; } = string.Empty;
-    public bool IsPrimary { get; init; }
+    public bool IsPrimary { get; set; }
 
     private Phone() { }
 

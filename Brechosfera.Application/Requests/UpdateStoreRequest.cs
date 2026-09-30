@@ -7,6 +7,5 @@ public sealed record UpdateStoreRequest(
     decimal AveragePrice,
     ELocalType LocalType,
     int? AverageQuantity,
-    string? Description,
-    AddressRequest Address
+    string? Description
 );

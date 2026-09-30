@@ -12,7 +12,6 @@ public class StoreRepository : Repository<Store>, IStoreRepository
     public async Task<Store?> GetStoreByIdAsync (Guid id, CancellationToken cancellationToken)
     {
         return await DbSet
-            .AsNoTracking()
             .Include(x => x.Address)
             .Include(x => x.ProductTypes)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);

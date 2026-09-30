@@ -5,7 +5,6 @@ using Brechosfera.Application.Requests;
 using Brechosfera.Application.Responses;
 using Brechosfera.Domain.Abstractions;
 using Brechosfera.Domain.Entities;
-using Brechosfera.Domain.Enums;
 using Brechosfera.Domain.Repositories;
 using Brechosfera.Domain.ValueObjects;
 
@@ -15,15 +14,170 @@ public class StoreService : BaseService, IStoreService
 {
     private readonly IStoreRepository _repository;
     private readonly IProductTypeRepository _productTypeRepository;
+    private readonly ICurrentUser _currentUser;
 
     public StoreService(
         IUnitOfWork unitOfWork,
         INotifier notifier,
         IStoreRepository repository,
-        IProductTypeRepository productTypeRepository
+        IProductTypeRepository productTypeRepository,
+        ICurrentUser currentUser
     ) : base(unitOfWork, notifier) {
         _repository = repository;
         _productTypeRepository = productTypeRepository;
+        _currentUser = currentUser;
+    }
+
+    public async Task RemoveSocialMediaAsync(Guid id, RemoveSocialMediaRequest request, CancellationToken cancellationToken)
+    {
+        var store = await _repository.GetStoreByIdAsync(id, cancellationToken);
+
+        if (store is null)
+        {
+            Notify("STORE_NOT_FOUND", "A loja não foi encontrada.");
+            return;
+        }
+
+        if (!store.CheckIsOwnedBy(_currentUser.UserId))
+        {
+            Notify("STORE_ACCESS_DENIED", "Você não tem permissão para alterar esta loja.");
+            return;
+        }
+
+        store.RemoveSocialMedia(request.link);
+        await CommitAsync(cancellationToken);
+    }
+
+    public async Task AddSocialMediaAsync(Guid id, SocialMediaRequest request, CancellationToken cancellationToken)
+    {
+        var store = await _repository.GetStoreByIdAsync(id, cancellationToken);
+
+        if (store is null)
+        {
+            Notify("STORE_NOT_FOUND", "A loja não foi encontrada.");
+            return;
+        }
+
+        if (!store.CheckIsOwnedBy(_currentUser.UserId))
+        {
+            Notify("STORE_ACCESS_DENIED", "Você não tem permissão para alterar esta loja.");
+            return;
+        }
+
+        var newSocialMedia = new SocialMedia(request.Link, request.Platform);
+
+        store.AddSocialMedia(newSocialMedia);
+        await CommitAsync(cancellationToken);
+    }
+
+    public async Task RemovePhoneAsync(Guid id, RemovePhoneRequest request, CancellationToken cancellationToken)
+    {
+        var store = await _repository.GetStoreByIdAsync(id, cancellationToken);
+
+        if (store is null)
+        {
+            Notify("STORE_NOT_FOUND", "A loja não foi encontrada.");
+            return;
+        }
+
+        if (!store.CheckIsOwnedBy(_currentUser.UserId))
+        {
+            Notify("STORE_ACCESS_DENIED", "Você não tem permissão para alterar esta loja.");
+            return;
+        }
+
+        store.RemovePhone(request.phoneNumber);
+        await CommitAsync(cancellationToken);
+    }
+
+    public async Task AddPhoneAsync(Guid id, PhoneRequest request, CancellationToken cancellationToken)
+    {
+        var store = await _repository.GetStoreByIdAsync(id, cancellationToken);
+
+        if (store is null)
+        {
+            Notify("STORE_NOT_FOUND", "A loja não foi encontrada.");
+            return;
+        }
+
+        if (!store.CheckIsOwnedBy(_currentUser.UserId))
+        {
+            Notify("STORE_ACCESS_DENIED", "Você não tem permissão para alterar esta loja.");
+            return;
+        }
+
+        var newPhone = new Phone(
+            request.Number,
+            request.IsPrimary
+        );
+
+        store.AddPhone(newPhone);
+        await CommitAsync(cancellationToken);
+    }
+
+    public async Task UpdateAddressAsync(Guid id, AddressRequest request, CancellationToken cancellationToken)
+    {
+        var store = await _repository.GetStoreByIdAsync(id, cancellationToken);
+
+        if (store is null)
+        {
+            Notify("STORE_NOT_FOUND", "A loja não foi encontrada.");
+            return;
+        }
+
+        if (!store.CheckIsOwnedBy(_currentUser.UserId))
+        {
+            Notify("STORE_ACCESS_DENIED", "Você não tem permissão para alterar esta loja.");
+            return;
+        }
+
+        var newAddress = new Address(
+            request.Cep,
+            request.Street,
+            request.Neighborhood,
+            request.City,
+            request.StateCode,
+            request.State,
+            request.Complement
+        );
+
+        store.SetAddress(newAddress);
+        await CommitAsync(cancellationToken);
+    }
+
+    public async Task UpdateProductTypesAsync(Guid id, ReplaceStoreProductTypesRequest request, CancellationToken cancellationToken)
+    {
+        Store? store = await _repository.GetStoreByIdAsync(id, cancellationToken);
+
+        if (store is null)
+        {
+            Notify("STORE_NOT_FOUND", "A loja não foi encontrada.");
+            return;
+        }
+
+        if (!store.CheckIsOwnedBy(_currentUser.UserId))
+        {
+            Notify("STORE_ACCESS_DENIED", "Você não tem permissão para alterar esta loja.");
+            return;
+        }
+
+        var newProductTypeIds = request.productTypeIds.Distinct().ToList();
+        var productTypes = await _productTypeRepository.ListProductTypesByIdsAsync(newProductTypeIds, cancellationToken);
+
+        if (productTypes.Count < 1)
+        {
+            Notify("PRODUCT_TYPE_MINIMUN", "Deve possuir pelo menos 1 tipo de produto.");
+            return;
+        }
+
+        if (productTypes.Count != newProductTypeIds.Count)
+        {
+            Notify("PRODUCT_TYPE_NOT_FOUND", "Um ou mais tipos de produto não foram encontrados.");
+            return;
+        }
+
+        store.ReplaceProductTypes(productTypes);
+        await CommitAsync(cancellationToken);
     }
 
     public async Task<StoreResponse?> UpdateStoreAsync(Guid id, UpdateStoreRequest request, CancellationToken cancellationToken)
@@ -32,7 +186,6 @@ public class StoreService : BaseService, IStoreService
 
         if (store is null)
         {
-
             Notify("STORE_NOT_FOUND", "A loja não foi encontrada.");
             return null;
         }
