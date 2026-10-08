@@ -28,6 +28,15 @@ public class Post : Entity
         Image = image;
     }
 
+    public void UpdatePost(string image, string description)
+    {
+        Guard.AgainstNullOrWhiteSpace(description, "DESCRIPTION_EMPTY", "A descrição não pode ser nula.");
+        Guard.AgainstNullOrWhiteSpace(image, "IMAGE_EMPTY", "A imagem não pode ser nula.");
+
+        Description = description;
+        Image = image;
+    }
+
     public void AddLike(Guid likeUserId)
     {
         Guard.AgainstEmptyGuid(likeUserId, "LIKE_USER_ID_EMPTY", "O usuário não pode ser nulo.");

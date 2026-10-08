@@ -18,6 +18,7 @@ public class EventController : ApiController
         _eventService = eventService;
     }
 
+    [Authorize]
     [HttpPut("{id:guid}")]
     public async Task<ActionResult<EventResponse>> UpdateEvent(Guid id, [FromBody] UpdateEventRequest request, CancellationToken cancellationToken)
     {

@@ -24,6 +24,30 @@ public class PostService : BaseService, IPostService
         _userRepository = userRepository;
     }
 
+    public async Task<PostResponse?> UpdatePostAsync(Guid id, UpdatePostRequest request, CancellationToken cancellationToken)
+    {
+        var post = await _repository.GetByIdAsync(id, cancellationToken);
+
+        if (post is null)
+        {
+            Notify(
+                "PostId",
+                "O post informado não foi encontrado."
+            );
+
+            return null;
+        }
+
+        post.UpdatePost(
+            request.Image,
+            request.Description
+        );
+
+        var success = await CommitAsync(cancellationToken);
+
+        return success ? post.ToResponse() : null;
+    }
+
     public async Task<IReadOnlyList<PostResponse>> ListPostAsync(CancellationToken cancellationToken)
     {
         var posts = await _repository.GetAllAsync(cancellationToken);

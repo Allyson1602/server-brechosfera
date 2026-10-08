@@ -18,6 +18,18 @@ public class PostController : ApiController
         _postService = postService;
     }
 
+    [Authorize]
+    [HttpPut("{id:guid}")]
+    public async Task<ActionResult<PostResponse>> UpdatePostAsync(Guid id, UpdatePostRequest request, CancellationToken cancellationToken)
+    {
+        var result = await _postService.UpdatePostAsync(id, request, cancellationToken);
+
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return Ok(result);
+    }
+
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<PostResponse>>> ListPost(CancellationToken cancellationToken)
     {
