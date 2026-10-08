@@ -18,6 +18,42 @@ public class UserController : ApiController
         _userService = userService;
     }
 
+    [Authorize]
+    [HttpPatch("{id:guid}/email")]
+    public async Task<ActionResult<bool>> UpdateEmail(Guid id, [FromBody] UpdateEmailRequest request, CancellationToken cancellationToken)
+    {
+        await _userService.UpdateEmail(id, request, cancellationToken);
+
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return NoContent();
+    }
+
+    [Authorize]
+    [HttpPatch("{id:guid}/password")]
+    public async Task<ActionResult<bool>> UpdatePassword(Guid id, [FromBody] UpdatePasswordRequest request, CancellationToken cancellationToken)
+    {
+        await _userService.UpdatePassword(id, request, cancellationToken);
+
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return NoContent();
+    }
+
+    [Authorize]
+    [HttpPatch("{id:guid}/username")]
+    public async Task<ActionResult<bool>> UpdateUsername(Guid id, [FromBody] UpdateUsernameRequest request, CancellationToken cancellationToken)
+    {
+        await _userService.UpdateUsername(id, request, cancellationToken);
+
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return NoContent();
+    }
+
     [AllowAnonymous]
     [HttpPost("register")]
     public async Task<ActionResult<UserResponse>> Register([FromBody] CreateRegisterRequest request)

@@ -36,6 +36,34 @@ public class UserCredential : Entity, IAggregateRoot
         PasswordHash = passwordHash;
     }
 
+    public void UpdateUsername(string username)
+    {
+        Guard.AgainstNullOrWhiteSpace(username, "CREDENTIAL_NAME_NOT_FOUND", "O nome do usuário é obrigatório.");
+
+        string cleanedUsername = username.Trim().ToLower();
+
+        Guard.AgainstRange(cleanedUsername, 3, 30, "CREDENTIAL_NAME_OUT_LENGTH", "O nome de usuário deve ter entre 3 e 30 caracteres.");
+        Guard.AgainstSpaces(cleanedUsername, "CREDENTIAL_NAME_WITH_SPACE", "O nome de usuário não pode conter espaços.");
+
+
+        Username = cleanedUsername;
+    }
+
+    public void UpdateEmail(string email)
+    {
+        Guard.AgainstNullOrWhiteSpace(email, "CREDENTIAL_EMAIL_NOT_FOUND", "O e-mail é obrigatório.");
+
+        Email = email.Trim().ToLower();
+    }
+
+    public void UpdatePassword(string passwordHash)
+    {
+        Guard.AgainstNullOrWhiteSpace(passwordHash, "CREDENTIAL_PASSWORD_NOT_FOUND", "A senha é obrigatória.");
+        Guard.AgainstRange(passwordHash, 40, 100, "CREDENTIAL_PASSWORD_INVALID_SIZE", "A senha possui um tamanho inválido.");
+
+        PasswordHash = passwordHash;
+    }
+
     public void ConfirmEmail()
     {
         if (IsEmailConfirmed) return;

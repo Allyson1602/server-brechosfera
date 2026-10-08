@@ -28,6 +28,89 @@ public class UserCredentialService : BaseService, IUserCredentialService
         _jwtProvider = jwtProvider;
     }
 
+    public async Task<bool> UpdatePassword(Guid id, UpdatePasswordRequest request, CancellationToken cancellationToken)
+    {
+        var user = await _repository.GetByIdAsync(id);
+
+        if (user is null)
+        {
+            Notify(
+                "UserId",
+                "O usuário informado não foi encontrado."
+            );
+
+            return false;
+        }
+
+        Password password = Password.Create(request.Password);
+
+        string passwordHash = _passwordHasher.Hash(password.Value);
+
+        user.UpdatePassword(passwordHash);
+
+        var success = await CommitAsync(cancellationToken);
+
+        return success;
+    }
+
+    public async Task<bool> UpdateEmail(Guid id, UpdateEmailRequest request, CancellationToken cancellationToken)
+    {
+        var user = await _repository.GetByIdAsync(id);
+
+        if (user is null)
+        {
+            Notify(
+                "UserId",
+                "O usuário informado não foi encontrado."
+            );
+
+            return false;
+        }
+
+        var hasEmail = await _repository.ExistsByEmailAsync(request.Email, cancellationToken);
+
+        if (hasEmail)
+        {
+            Notify("Email", "E-mail já está em uso.");
+            return false;
+        }
+
+        user.UpdateEmail(request.Email);
+
+        var success = await CommitAsync(cancellationToken);
+
+        return success;
+    }
+
+    public async Task<bool> UpdateUsername(Guid id, UpdateUsernameRequest request, CancellationToken cancellationToken)
+    {
+        var user = await _repository.GetByIdAsync(id);
+
+        if (user is null)
+        {
+            Notify(
+                "UserId",
+                "O usuário informado não foi encontrado."
+            );
+
+            return false;
+        }
+
+        var hasUsername = await _repository.ExistsByUsernameAsync(request.Username, cancellationToken);
+
+        if (hasUsername)
+        {
+            Notify("Username", "Nome de usuário indisponível.");
+            return default;
+        }
+
+        user.UpdateUsername(request.Username);
+
+        var success = await CommitAsync(cancellationToken);
+
+        return success;
+    }
+
     public async Task<UserResponse?> RegisterAsync(CreateRegisterRequest request, CancellationToken cancellationToken = default)
     {
         Password password = Password.Create(request.Password);
