@@ -18,6 +18,17 @@ public class EventController : ApiController
         _eventService = eventService;
     }
 
+    [HttpPut("{id:guid}")]
+    public async Task<ActionResult<EventResponse>> UpdateEvent(Guid id, [FromBody] UpdateEventRequest request, CancellationToken cancellationToken)
+    {
+        var result = await _eventService.UpdateEventAsync(id, request, cancellationToken);
+
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return Ok(result);
+    }
+
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<EventResponse>>> ListEvent(CancellationToken cancellationToken)
     {

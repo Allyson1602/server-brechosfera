@@ -44,4 +44,30 @@ public class Event : Entity, IAggregateRoot
         EndDate = endDate;
         ResponsibleStoreId = responsibleStoreId;
     }
+
+    public void UpdateEvent(
+        string banner,
+        string name,
+        string description,
+        string organizerName,
+        Address address,
+        DateTimeOffset startDate,
+        DateTimeOffset endDate
+    )
+    {
+        Guard.AgainstNullOrWhiteSpace(banner, "BANNER_EMPTY", "O banner não pode ser nulo.");
+        Guard.AgainstNullOrWhiteSpace(name, "NAME_EMPTY", "O nome não pode ser nulo.");
+        Guard.AgainstNullOrWhiteSpace(description, "DESCRIPTION_EMPTY", "A descrição não pode ser nula.");
+        Guard.AgainstNullOrWhiteSpace(organizerName, "ORGANIZER_NAME_EMPTY", "O nome do organizador não pode ser nulo.");
+        Guard.AgainstNull(address, "EVENT_ADDRESS_EMPTY", "A localização não pode ser nula.");
+        Guard.AgainstInvalidDateRange(startDate, endDate, "DATE_RANGE_INVALID", "A data de início deve ser anterior à data de término.");
+
+        Banner = banner;
+        Name = name;
+        Description = description;
+        OrganizerName = organizerName;
+        Address = address;
+        StartDate = startDate;
+        EndDate = endDate;
+    }
 }

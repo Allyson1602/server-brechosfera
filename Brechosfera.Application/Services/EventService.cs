@@ -25,6 +25,45 @@ public class EventService : BaseService, IEventService
         _storeRepository = storeRepository;
     }
 
+    public async Task<EventResponse?> UpdateEventAsync(Guid id, UpdateEventRequest request, CancellationToken cancellationToken)
+    {
+        var eventData = await _repository.GetByIdAsync(id);
+
+        if (eventData is null)
+        {
+            Notify(
+                "EventId",
+                "O evento informado não foi encontrado."
+            );
+
+            return null;
+        }
+
+        var newAddress = new Address(
+            request.Address.Cep,
+            request.Address.Street,
+            request.Address.Neighborhood,
+            request.Address.City,
+            request.Address.StateCode,
+            request.Address.State,
+            request.Address.Complement
+        );
+
+        eventData.UpdateEvent(
+            request.Banner,
+            request.Name,
+            request.Description,
+            request.OrganizerName,
+            newAddress,
+            request.StartDate,
+            request.EndDate
+        );
+
+        var success = await CommitAsync(cancellationToken);
+
+        return success ? eventData.ToResponse() : null;
+    }
+
     public async Task<IReadOnlyList<EventResponse>> ListEventAsync(CancellationToken cancellationToken)
     {
         IReadOnlyList<Event> events = await _repository.GetAllAsync(cancellationToken);
