@@ -5,6 +5,7 @@ namespace Brechosfera.Application.Interfaces;
 
 public interface IStoreService
 {
+    public Task<bool> DeleteStoreAsync(Guid id, CancellationToken cancellationToken);
     public Task RemoveSocialMediaAsync(Guid id, RemoveSocialMediaRequest request, CancellationToken cancellationToken);
     public Task AddSocialMediaAsync(Guid id, SocialMediaRequest request, CancellationToken cancellationToken);
     public Task RemovePhoneAsync(Guid id, RemovePhoneRequest request, CancellationToken cancellationToken);

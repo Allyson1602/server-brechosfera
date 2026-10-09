@@ -25,9 +25,6 @@ public class UserCredentialMapping : EntityMapping<UserCredential>
             .HasMaxLength(150)
             .IsRequired();
 
-        builder.HasIndex(x => x.Email)
-            .IsUnique();
-
         builder.Property(x => x.PasswordHash)
             .HasMaxLength(100)
             .IsRequired();

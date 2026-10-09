@@ -5,6 +5,7 @@ namespace Brechosfera.Application.Interfaces;
 
 public interface IUserCredentialService
 {
+    Task<bool> DeleteUserAsync(Guid id, CancellationToken cancellationToken);
     Task<bool> UpdateUsername(Guid id, UpdateUsernameRequest request, CancellationToken cancellationToken);
     Task<bool> UpdateEmail(Guid id, UpdateEmailRequest request, CancellationToken cancellationToken);
     Task<bool> UpdatePassword(Guid id, UpdatePasswordRequest request, CancellationToken cancellationToken);

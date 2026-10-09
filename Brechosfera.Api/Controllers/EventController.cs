@@ -19,6 +19,18 @@ public class EventController : ApiController
     }
 
     [Authorize]
+    [HttpDelete("{id:guid}")]
+    public async Task<ActionResult<bool>> DeleteEvent(Guid id, CancellationToken cancellationToken)
+    {
+        var result = await _eventService.DeleteEventAsync(id, cancellationToken);
+
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return NoContent();
+    }
+
+    [Authorize]
     [HttpPut("{id:guid}")]
     public async Task<ActionResult<EventResponse>> UpdateEvent(Guid id, [FromBody] UpdateEventRequest request, CancellationToken cancellationToken)
     {

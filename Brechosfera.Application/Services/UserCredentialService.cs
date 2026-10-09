@@ -28,6 +28,37 @@ public class UserCredentialService : BaseService, IUserCredentialService
         _jwtProvider = jwtProvider;
     }
 
+    public async Task<bool> DeleteUserAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var user = await _repository.GetByIdAsync(id);
+
+        if (user is null)
+        {
+            Notify(
+                "UserId",
+                "O usuário informado não foi encontrado."
+            );
+
+            return false;
+        }
+
+        if (user.DeletedAt.HasValue)
+        {
+            Notify(
+                "DeleteUser",
+                "O evento já foi deletado."
+            );
+
+            return false;
+        }
+
+        user.MarkAsDeleted();
+
+        var success = await CommitAsync(cancellationToken);
+
+        return success;
+    }
+
     public async Task<bool> UpdatePassword(Guid id, UpdatePasswordRequest request, CancellationToken cancellationToken)
     {
         var user = await _repository.GetByIdAsync(id);
@@ -47,6 +78,8 @@ public class UserCredentialService : BaseService, IUserCredentialService
         string passwordHash = _passwordHasher.Hash(password.Value);
 
         user.UpdatePassword(passwordHash);
+
+        user.MarkAsUpdated();
 
         var success = await CommitAsync(cancellationToken);
 
@@ -77,6 +110,8 @@ public class UserCredentialService : BaseService, IUserCredentialService
 
         user.UpdateEmail(request.Email);
 
+        user.MarkAsUpdated();
+
         var success = await CommitAsync(cancellationToken);
 
         return success;
@@ -105,6 +140,8 @@ public class UserCredentialService : BaseService, IUserCredentialService
         }
 
         user.UpdateUsername(request.Username);
+
+        user.MarkAsUpdated();
 
         var success = await CommitAsync(cancellationToken);
 

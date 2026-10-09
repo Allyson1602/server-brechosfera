@@ -1,6 +1,8 @@
-﻿using Brechosfera.Domain.Entities;
+﻿using Brechosfera.Domain.Abstractions;
+using Brechosfera.Domain.Entities;
 using Brechosfera.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Brechosfera.Infrastructure.Data;
 
@@ -18,5 +20,42 @@ public class AppDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+
+        ApplySoftDeleteFilters(modelBuilder);
+    }
+
+    private static void ApplySoftDeleteFilters(ModelBuilder modelBuilder)
+    {
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            if (
+                !typeof(Entity).IsAssignableFrom(entityType.ClrType) ||
+                entityType.IsOwned()
+            )
+            {
+                continue;
+            }
+
+            var parameter = Expression.Parameter(
+                entityType.ClrType,
+                "entity"
+            );
+
+            var deletedAt = Expression.Property(
+                parameter,
+                nameof(Entity.DeletedAt)
+            );
+
+            var filter = Expression.Lambda(
+                Expression.Equal(
+                    deletedAt,
+                    Expression.Constant(null, typeof(DateTimeOffset?))
+                ),
+                parameter
+            );
+
+            modelBuilder.Entity(entityType.ClrType)
+                .HasQueryFilter(filter);
+        }
     }
 }

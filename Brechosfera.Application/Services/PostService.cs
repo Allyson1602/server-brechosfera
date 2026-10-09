@@ -24,6 +24,37 @@ public class PostService : BaseService, IPostService
         _userRepository = userRepository;
     }
 
+    public async Task<bool> DeletePostAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var post = await _repository.GetByIdAsync(id);
+
+        if (post is null)
+        {
+            Notify(
+                "PostId",
+                "O post informado não foi encontrado."
+            );
+
+            return false;
+        }
+
+        if (post.DeletedAt.HasValue)
+        {
+            Notify(
+                "DeletePost",
+                "O post já foi deletado."
+            );
+
+            return false;
+        }
+
+        post.MarkAsDeleted();
+
+        var success = await CommitAsync(cancellationToken);
+
+        return success;
+    }
+
     public async Task<PostResponse?> UpdatePostAsync(Guid id, UpdatePostRequest request, CancellationToken cancellationToken)
     {
         var post = await _repository.GetByIdAsync(id, cancellationToken);
@@ -42,6 +73,8 @@ public class PostService : BaseService, IPostService
             request.Image,
             request.Description
         );
+
+        post.MarkAsUpdated();
 
         var success = await CommitAsync(cancellationToken);
 

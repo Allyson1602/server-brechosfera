@@ -19,8 +19,20 @@ public class PostController : ApiController
     }
 
     [Authorize]
+    [HttpDelete("{id:guid}")]
+    public async Task<ActionResult<bool>> DeletePost(Guid id, CancellationToken cancellationToken)
+    {
+        var result = await _postService.DeletePostAsync(id, cancellationToken);
+
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return NoContent();
+    }
+
+    [Authorize]
     [HttpPut("{id:guid}")]
-    public async Task<ActionResult<PostResponse>> UpdatePostAsync(Guid id, UpdatePostRequest request, CancellationToken cancellationToken)
+    public async Task<ActionResult<PostResponse>> UpdatePost(Guid id, UpdatePostRequest request, CancellationToken cancellationToken)
     {
         var result = await _postService.UpdatePostAsync(id, request, cancellationToken);
 

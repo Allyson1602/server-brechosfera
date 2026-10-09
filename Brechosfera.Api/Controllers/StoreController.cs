@@ -19,6 +19,18 @@ public class StoreController : ApiController
     }
 
     [Authorize]
+    [HttpDelete("{id:guid}")]
+    public async Task<ActionResult<bool>> DeleteStore(Guid id, CancellationToken cancellationToken)
+    {
+        var result = await _storeService.DeleteStoreAsync(id, cancellationToken);
+
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return NoContent();
+    }
+
+    [Authorize]
     [HttpDelete("{id:guid}/social-media")]
     public async Task<ActionResult> RemoveSocialMedia(Guid id, [FromBody]RemoveSocialMediaRequest request, CancellationToken cancellationToken)
     {

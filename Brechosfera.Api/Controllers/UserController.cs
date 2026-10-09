@@ -2,6 +2,7 @@
 using Brechosfera.Application.Notifications;
 using Brechosfera.Application.Requests;
 using Brechosfera.Application.Responses;
+using Brechosfera.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,18 @@ public class UserController : ApiController
     public UserController(INotifier notifier, IUserCredentialService userService) : base(notifier)
     {
         _userService = userService;
+    }
+
+    [Authorize]
+    [HttpDelete("{id:guid}")]
+    public async Task<ActionResult<bool>> DeleteUser(Guid id, CancellationToken cancellationToken)
+    {
+        var result = await _userService.DeleteUserAsync(id, cancellationToken);
+
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return NoContent();
     }
 
     [Authorize]

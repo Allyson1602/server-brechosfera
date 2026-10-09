@@ -28,6 +28,37 @@ public class StoreService : BaseService, IStoreService
         _currentUser = currentUser;
     }
 
+    public async Task<bool> DeleteStoreAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var store = await _repository.GetByIdAsync(id);
+
+        if (store is null)
+        {
+            Notify(
+                "StoreId",
+                "A loja informado não foi encontrado."
+            );
+
+            return false;
+        }
+
+        if (store.DeletedAt.HasValue)
+        {
+            Notify(
+                "DeleteStore",
+                "A loja já foi deletada."
+            );
+
+            return false;
+        }
+
+        store.MarkAsDeleted();
+
+        var success = await CommitAsync(cancellationToken);
+
+        return success;
+    }
+
     public async Task RemoveSocialMediaAsync(Guid id, RemoveSocialMediaRequest request, CancellationToken cancellationToken)
     {
         var store = await _repository.GetStoreByIdAsync(id, cancellationToken);

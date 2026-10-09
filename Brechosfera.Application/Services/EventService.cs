@@ -25,6 +25,37 @@ public class EventService : BaseService, IEventService
         _storeRepository = storeRepository;
     }
 
+    public async Task<bool> DeleteEventAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var eventData = await _repository.GetByIdAsync(id);
+
+        if (eventData is null)
+        {
+            Notify(
+                "EventId",
+                "O evento informado não foi encontrado."
+            );
+
+            return false;
+        }
+
+        if (eventData.DeletedAt.HasValue)
+        {
+            Notify(
+                "DeleteEvent",
+                "O evento já foi deletado."
+            );
+
+            return false;
+        }
+
+        eventData.MarkAsDeleted();
+
+        var success = await CommitAsync(cancellationToken);
+
+        return success;
+    }
+
     public async Task<EventResponse?> UpdateEventAsync(Guid id, UpdateEventRequest request, CancellationToken cancellationToken)
     {
         var eventData = await _repository.GetByIdAsync(id);
@@ -58,6 +89,8 @@ public class EventService : BaseService, IEventService
             request.StartDate,
             request.EndDate
         );
+
+        eventData.MarkAsUpdated();
 
         var success = await CommitAsync(cancellationToken);
 

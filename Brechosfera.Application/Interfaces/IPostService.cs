@@ -5,6 +5,7 @@ namespace Brechosfera.Application.Interfaces;
 
 public interface IPostService
 {
+    public Task<bool> DeletePostAsync(Guid id, CancellationToken cancellationToken);
     public Task<PostResponse?> UpdatePostAsync(Guid id, UpdatePostRequest request, CancellationToken cancellationToken);
     public Task<IReadOnlyList<PostResponse>> ListPostAsync(CancellationToken cancellationToken);
     public Task<PostResponse?> GetPostByIdAsync(Guid id, CancellationToken cancellationToken);
