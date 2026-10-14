@@ -1,5 +1,7 @@
 using Brechosfera.Api.Exceptions;
+using Brechosfera.Application.Handlers;
 using Brechosfera.Application.Interfaces;
+using Brechosfera.Application.Messages;
 using Brechosfera.Application.Notifications;
 using Brechosfera.Application.Services;
 using Brechosfera.Application.Validators;
@@ -66,6 +68,9 @@ builder.Services
         };
     });
 builder.Services.AddAuthorization();
+
+builder.Services.AddScoped<IMessageHandler<UserMessage>, UserHandler>();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddDatabaseConfiguration(builder.Configuration);
 builder.Services.AddSecurityConfiguration();

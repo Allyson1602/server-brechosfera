@@ -1,0 +1,13 @@
+﻿using Brechosfera.Application;
+using Brechosfera.Application.Messages;
+using Brechosfera.Infrastructure;
+using Microsoft.Extensions.Hosting;
+
+var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
+
+builder.Services.AddRabbitMqConsumer<UserMessage>(Queues.UserCreated);
+
+builder.Build().Run();

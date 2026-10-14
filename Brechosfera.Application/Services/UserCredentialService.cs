@@ -1,4 +1,5 @@
 ﻿using Brechosfera.Application.Interfaces;
+using Brechosfera.Application.Messages;
 using Brechosfera.Application.Notifications;
 using Brechosfera.Application.Requests;
 using Brechosfera.Application.Responses;
@@ -14,18 +15,21 @@ public class UserCredentialService : BaseService, IUserCredentialService
     private readonly IUserCredentialRepository _repository;
     private readonly IPasswordHasher _passwordHasher;
     private readonly ITokenGenerator _jwtProvider;
+    private readonly IMessagePublisher _publisher;
 
     public UserCredentialService(
         IPasswordHasher passwordHasher,
         ITokenGenerator jwtProvider,
         IUserCredentialRepository repository,
         IUnitOfWork unitOfWork,
-        INotifier notifier
+        INotifier notifier,
+        IMessagePublisher publisher
     ) : base(unitOfWork, notifier)
     {
         _repository = repository;
         _passwordHasher = passwordHasher;
         _jwtProvider = jwtProvider;
+        _publisher = publisher;
     }
 
     public async Task<bool> DeleteUserAsync(Guid id, CancellationToken cancellationToken)
@@ -181,6 +185,12 @@ public class UserCredentialService : BaseService, IUserCredentialService
             Notify("Form", "Houve um erro ao persistir os dados no banco.");
             return default;
         }
+
+        await _publisher.PublishAsync(
+            Queues.UserCreated,
+            new UserMessage(newUser.Id, newUser.Username, newUser.Email, newUser.CreatedAt),
+            cancellationToken
+        );
 
         return new UserResponse(newUser.Id, newUser.Username, newUser.Email);
     }
