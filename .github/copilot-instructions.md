@@ -1,4 +1,4 @@
 # Copilot Instructions
 
 ## Project Guidelines
-- O usuário prefere que, ao solicitar recomendações ou diagnósticos, eu não altere os arquivos do workspace; devo apenas indicar as mudanças recomendadas, a menos que ele peça explicitamente para implementar.
+- Quando solicitar recomendações ou diagnósticos, o usuário prefere que eu não altere os arquivos do workspace; devo apenas indicar as mudanças recomendadas, a menos que peça explicitamente para implementar.

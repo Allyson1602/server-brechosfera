@@ -1,12 +1,15 @@
 ﻿using Brechosfera.Domain.Abstractions;
 using Brechosfera.Domain.Entities;
 using Brechosfera.Domain.ValueObjects;
+using Brechosfera.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace Brechosfera.Infrastructure.Data;
 
-public class AppDbContext : DbContext
+public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 

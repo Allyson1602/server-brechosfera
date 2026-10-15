@@ -54,7 +54,7 @@ public static class InfrastructureServiceCollectionExtensions
             }
             catch (Exception ex) when (attempt < 10)
             {
-                logger.LogWarning(ex, "RabbitMQ indisponível (tentativa {Attempt/10). Nova tentativa em 3s...", attempt);
+                logger.LogWarning(ex, "RabbitMQ indisponível (tentativa {Attempt}/10). Nova tentativa em 3s...", attempt);
                 Thread.Sleep(TimeSpan.FromSeconds(3));
             }
         }

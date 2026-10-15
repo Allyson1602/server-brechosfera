@@ -1,4 +1,5 @@
 using Brechosfera.Api.Exceptions;
+using Brechosfera.Application;
 using Brechosfera.Application.Handlers;
 using Brechosfera.Application.Interfaces;
 using Brechosfera.Application.Messages;
@@ -6,10 +7,13 @@ using Brechosfera.Application.Notifications;
 using Brechosfera.Application.Services;
 using Brechosfera.Application.Validators;
 using Brechosfera.Infrastructure;
+using Brechosfera.Infrastructure.Data;
+using Brechosfera.Infrastructure.Identity;
 using Brechosfera.Infrastructure.Security;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -67,10 +71,31 @@ builder.Services
             ClockSkew = TimeSpan.Zero
         };
     });
+
+builder.Services.AddIdentityCore<ApplicationUser>(options =>
+{
+    options.User.RequireUniqueEmail = true;
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._";
+
+    options.SignIn.RequireConfirmedEmail = true;
+    
+    options.Password.RequiredLength = 8;
+    options.Password.RequireDigit = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = false;
+
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+})
+.AddEntityFrameworkStores<AppDbContext>()
+.AddDefaultTokenProviders()
+.AddSignInManager();
+
 builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<IMessageHandler<UserMessage>, UserHandler>();
-builder.Services.AddInfrastructure(builder.Configuration);
+
+builder.Services.AddApplication().AddInfrastructure(builder.Configuration).AddApi();
 
 builder.Services.AddDatabaseConfiguration(builder.Configuration);
 builder.Services.AddSecurityConfiguration();

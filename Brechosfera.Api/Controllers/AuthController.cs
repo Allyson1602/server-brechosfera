@@ -11,32 +11,18 @@ namespace Brechosfera.Api.Controllers;
 [Produces("application/json")]
 public class AuthController : ApiController
 {
-    private readonly IUserCredentialService _userService;
+    private readonly IIdentityService _identity;
 
-    public AuthController(INotifier notifier, IUserCredentialService userService) : base(notifier)
-    {
-        _userService = userService;
-    }
+    public AuthController(INotifier notifier, IIdentityService identity) : base(notifier) => _identity = identity;
 
     [AllowAnonymous]
-    [HttpPost("login")]
-    public async Task<ActionResult<LoginResponse>> Login([FromBody] CreateLoginRequest request)
+    [HttpPost("register")]
+    public async Task<IActionResult> Register(RegisterUserRequest request)
     {
-        var token = await _userService.LoginAsync(request);
+        var (result, userId) = await _identity.RegisterAsync(request);
 
-        if (!IsValidOperation())
-        {
-            var message = _notifier
-                .GetNotifications()
-                .FirstOrDefault()?.Message;
-
-            return Problem(
-                statusCode: StatusCodes.Status401Unauthorized,
-                title: "Falha na autenticação",
-                detail: message
-            );
-        }
-
-        return Ok(token);
+        return result.Succeeded
+            ? Ok(new { userId })
+            : BadRequest(new { result.Errors });
     }
 }
