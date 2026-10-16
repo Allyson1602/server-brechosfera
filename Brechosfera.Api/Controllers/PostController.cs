@@ -18,7 +18,6 @@ public class PostController : ApiController
         _postService = postService;
     }
 
-    [Authorize]
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult<bool>> DeletePost(Guid id, CancellationToken cancellationToken)
     {
@@ -30,7 +29,6 @@ public class PostController : ApiController
         return NoContent();
     }
 
-    [Authorize]
     [HttpPut("{id:guid}")]
     public async Task<ActionResult<PostResponse>> UpdatePost(Guid id, UpdatePostRequest request, CancellationToken cancellationToken)
     {
@@ -42,6 +40,7 @@ public class PostController : ApiController
         return Ok(result);
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<PostResponse>>> ListPost(CancellationToken cancellationToken)
     {
@@ -50,6 +49,7 @@ public class PostController : ApiController
         return Ok(result);
     }
 
+    [AllowAnonymous]
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<PostResponse>> GetPostById(Guid id, CancellationToken cancellationToken)
     {
@@ -61,7 +61,6 @@ public class PostController : ApiController
         return Ok(result);
     }
 
-    [Authorize]
     [HttpPost]
     public async Task<ActionResult<PostResponse>> CreatePost(CreatePostRequest request, CancellationToken cancellationToken)
     {

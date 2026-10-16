@@ -5,7 +5,7 @@ using Microsoft.Extensions.Hosting;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-builder.Services.AddApplication();
+builder.Services.AddMessageHandlers();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddRabbitMqConsumer<UserMessage>(Queues.UserCreated);

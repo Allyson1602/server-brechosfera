@@ -1,5 +1,6 @@
 ﻿using Brechosfera.Domain.Entities;
 using Brechosfera.Domain.ValueObjects;
+using Brechosfera.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -25,7 +26,7 @@ public class PostMapping : EntityMapping<Post>
 
         builder.HasIndex(x => x.UserId);
 
-        builder.HasOne<UserCredential>()
+        builder.HasOne<ApplicationUser>()
             .WithMany()
             .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Restrict);
@@ -42,7 +43,7 @@ public class PostMapping : EntityMapping<Post>
 
             like.HasKey("PostId", nameof(PostLike.UserId));
 
-            like.HasOne<UserCredential>()
+            like.HasOne<ApplicationUser>()
                 .WithMany()
                 .HasForeignKey(x => x.UserId)
                 .OnDelete(DeleteBehavior.Cascade);

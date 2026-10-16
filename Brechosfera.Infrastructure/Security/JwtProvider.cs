@@ -1,48 +1,44 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Brechosfera.Application.Interfaces;
-using Brechosfera.Domain.Entities;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Options;
+using Brechosfera.Application.Common;
 
 namespace Brechosfera.Infrastructure.Security;
 
-public class JwtProvider : ITokenGenerator
+public sealed class JwtProvider(IOptions<JwtSettings> options) : ITokenGenerator
 {
-    private readonly JwtSettings _jwtSettings;
+    private readonly JwtSettings _settings = options.Value;
 
-    public JwtProvider(IOptions<JwtSettings> jwtSettings)
+    public (string Token, DateTime ExpiresAt) Generate(AuthUser user)
     {
-        _jwtSettings = jwtSettings.Value;
-    }
-
-    public string Generate(UserCredential user)
-    {
-        var tokenhandler = new JwtSecurityTokenHandler();
-        var key = Encoding.UTF8.GetBytes(_jwtSettings.Key);
+        var expiresAt = DateTime.UtcNow.AddMinutes(_settings.ExpirationMinutes);
 
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email),
-            new Claim(JwtRegisteredClaimNames.UniqueName, user.Username)
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(ClaimTypes.Name, user.UserName),
+            new(ClaimTypes.Email, user.Email),
         };
 
-        var tokenDescriptor = new SecurityTokenDescriptor
+        claims.AddRange(user.Roles.Select(role => new Claim(ClaimTypes.Role, role)));
+
+        var descriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Issuer = _jwtSettings.Issuer,
-            Audience = _jwtSettings.Audience,
-            Expires = DateTime.UtcNow.AddMinutes(_jwtSettings.ExpirationMinutes),
+            Issuer = _settings.Issuer,
+            Audience = _settings.Audience,
+            Expires = expiresAt,
             SigningCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(key),
-                SecurityAlgorithms.HmacSha256Signature
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Key)),
+                SecurityAlgorithms.HmacSha256
             )
         };
 
-        var token = tokenhandler.CreateToken(tokenDescriptor);
+        var handler = new JwtSecurityTokenHandler();
 
-        return tokenhandler.WriteToken(token);
+        return (handler.WriteToken(handler.CreateToken(descriptor)), expiresAt);
     }
 }

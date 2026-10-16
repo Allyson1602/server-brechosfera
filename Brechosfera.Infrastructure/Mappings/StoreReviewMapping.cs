@@ -1,5 +1,6 @@
 ﻿using Brechosfera.Domain.Entities;
 using Brechosfera.Domain.ValueObjects;
+using Brechosfera.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -31,5 +32,10 @@ public class StoreReviewMapping : EntityMapping<StoreReview>
         builder.Property(x => x.Comment)
             .HasMaxLength(500)
             .IsRequired(false);
+
+        builder.HasOne<ApplicationUser>()
+            .WithMany()
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

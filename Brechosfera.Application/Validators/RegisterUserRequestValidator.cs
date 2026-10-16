@@ -3,22 +3,22 @@ using FluentValidation;
 
 namespace Brechosfera.Application.Validators;
 
-public sealed class RegisterRequestValidator : AbstractValidator<CreateRegisterRequest>
+public sealed class RegisterUserRequestValidator : AbstractValidator<RegisterUserRequest>
 {
-    public RegisterRequestValidator()
+    public RegisterUserRequestValidator()
     {
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("Informe o e-mail.")
             .EmailAddress().WithMessage("E-mail inválido.")
-            .MaximumLength(100).WithMessage("E-mail muito grande.");
+            .MaximumLength(256);
 
         RuleFor(x => x.Username)
             .NotEmpty().WithMessage("Informe o nome de usuário.")
-            .MinimumLength(3).WithMessage("Pelo menos 3 caracteres.")
-            .MaximumLength(100).WithMessage("No máximo 100 caracteres.");
+            .Length(3, 30).WithMessage("Entre 3 e 30 caracteres.")
+            .Matches("^[a-zA-Z0-9._-]+$").WithMessage("Use apenas letras, números, '.', '_' ou '-'.");
 
         RuleFor(x => x.Password)
             .NotEmpty().WithMessage("Informe a senha.")
-            .MaximumLength(100).WithMessage("Senha deve ser menor.");
+            .MinimumLength(8).WithMessage("A senha deve ter pelo menos 8 caracteres.");
     }
 }

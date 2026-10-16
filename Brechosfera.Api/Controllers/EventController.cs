@@ -42,6 +42,7 @@ public class EventController : ApiController
         return Ok(result);
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<EventResponse>>> ListEvent(CancellationToken cancellationToken)
     {
@@ -50,6 +51,7 @@ public class EventController : ApiController
         return Ok(result);
     }
 
+    [AllowAnonymous]
     [HttpGet("store/{storeId:guid}")]
     public async Task<ActionResult<IReadOnlyList<EventResponse>>> ListEventByStoreId(Guid storeId, CancellationToken cancellationToken)
     {

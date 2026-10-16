@@ -8,9 +8,6 @@ public sealed class CreateStoreRequestValidator : AbstractValidator<CreateStoreR
 {
     public CreateStoreRequestValidator()
     {
-        RuleFor(x => x.OwnerUserId)
-            .NotEmpty().WithMessage("Preencha o usuário vinculado.");
-
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Preencha o nome da loja.")
             .MaximumLength(150).WithMessage("Nome com no máximo 150 caracteres.");

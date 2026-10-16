@@ -13,13 +13,16 @@ namespace Brechosfera.Application.Services;
 public class StoreReviewService : BaseService, IStoreReviewService
 {
     private readonly IStoreReviewRepository _repository;
+    private readonly ICurrentUser _currentUser;
 
     public StoreReviewService(
         IUnitOfWork unitOfWork,
         INotifier notifier,
-        IStoreReviewRepository repository
-    ): base(unitOfWork, notifier) {
+        IStoreReviewRepository repository,
+        ICurrentUser currentUser
+    ) : base(unitOfWork, notifier) {
         _repository = repository;
+        _currentUser = currentUser;
     }
 
     public async Task<List<StoreReviewResponse>> ListStoreReviewByStoreIdAsync(Guid storeId, CancellationToken cancellationToken)
@@ -50,7 +53,7 @@ public class StoreReviewService : BaseService, IStoreReviewService
         var rating = Rating.Create(request.Rating);
 
         var storeReview = new StoreReview(
-            request.UserId,
+            _currentUser.UserId,
             request.StoreId,
             rating,
             request.Comment

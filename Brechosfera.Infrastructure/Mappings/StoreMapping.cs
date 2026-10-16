@@ -1,4 +1,5 @@
 ﻿using Brechosfera.Domain.Entities;
+using Brechosfera.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -34,7 +35,7 @@ public class StoreMapping : EntityMapping<Store>
         builder.Property(x => x.Description)
             .HasMaxLength(500);
 
-        builder.HasOne<UserCredential>()
+        builder.HasOne<ApplicationUser>()
             .WithMany()
             .HasForeignKey(x => x.OwnerUserId)
             .OnDelete(DeleteBehavior.Restrict);

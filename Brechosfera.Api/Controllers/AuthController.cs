@@ -7,22 +7,45 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Brechosfera.Api.Controllers;
 
+[AllowAnonymous]
 [Route("api/auth")]
 [Produces("application/json")]
 public class AuthController : ApiController
 {
-    private readonly IIdentityService _identity;
+    private readonly IAuthService _authService;
 
-    public AuthController(INotifier notifier, IIdentityService identity) : base(notifier) => _identity = identity;
+    public AuthController(INotifier notifier, IAuthService authService) : base(notifier) => _authService = authService;
 
-    [AllowAnonymous]
     [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterUserRequest request)
+    public async Task<IActionResult> Register(RegisterUserRequest request, CancellationToken cancellationToken)
     {
-        var (result, userId) = await _identity.RegisterAsync(request);
+        var userId = await _authService.RegisterAsync(request, cancellationToken);
 
-        return result.Succeeded
-            ? Ok(new { userId })
-            : BadRequest(new { result.Errors });
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return Ok(new { userId, message = "Cadastro realizado. Enviamos um link de confirmação para o seu e-mail." });
+    }
+
+    [HttpGet("confirm-email")]
+    public async Task<IActionResult> ConfirmEmail([FromQuery] Guid userId, [FromQuery] string token)
+    {
+        await _authService.ConfirmEmailAsync(userId, token);
+
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return Ok(new { message = "E-mail confirmado. Você já pode entrar." });
+    }
+
+    [HttpPost("login")]
+    public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
+    {
+        var response = await _authService.LoginAsync(request);
+
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return Ok(response);
     }
 }

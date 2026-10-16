@@ -13,7 +13,6 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-    public DbSet<UserCredential> UserCredentials { get; set; }
     public DbSet<Store> Store { get; set; }
     public DbSet<Address> StoreAddress { get; set; }
     public DbSet<ProductType> ProductType { get; set; }

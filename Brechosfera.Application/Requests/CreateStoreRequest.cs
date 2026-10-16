@@ -3,7 +3,6 @@
 namespace Brechosfera.Application.Requests;
 
 public sealed record CreateStoreRequest(
-    Guid OwnerUserId,
     string Name,
     decimal AveragePrice,
     ELocalType LocalType,

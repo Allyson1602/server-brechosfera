@@ -20,6 +20,7 @@ public class StoreReviewController : ApiController
         _storeReviewService = storeReviewService;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<List<StoreReviewResponse>>> ListStoreReviewByStoreId(
         [FromQuery] Guid storeId,
@@ -33,6 +34,7 @@ public class StoreReviewController : ApiController
         return Ok(storeReviews);
     }
 
+    [AllowAnonymous]
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<StoreReviewResponse>> GetStoreReviewById(Guid id, CancellationToken cancellationToken)
     {
@@ -44,7 +46,6 @@ public class StoreReviewController : ApiController
         return Ok(storeReview);
     }
 
-    [Authorize]
     [HttpPost]
     public async Task<ActionResult<StoreReviewResponse>> AddStoreReview([FromBody] CreateStoreReviewRequest request, CancellationToken cancellationToken)
     {

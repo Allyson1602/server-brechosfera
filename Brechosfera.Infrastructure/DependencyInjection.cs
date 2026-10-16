@@ -5,19 +5,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Brechosfera.Infrastructure.Data;
 using Brechosfera.Domain.Abstractions;
 using Brechosfera.Infrastructure.Repositories;
-using Brechosfera.Application.Interfaces;
-using Brechosfera.Infrastructure.Security;
 
 namespace Brechosfera.Infrastructure;
 
 [ExcludeFromCodeCoverage]
-public static class DbContextExtensions
+public static class PersistenceExtensions
 {
     private const int DbMaxRetryCount = 3;
     private const int DbCommandTimeout = 35;
     private const string DbMigrationAssemblyName = "Brechosfera.Infrastructure";
 
-    public static IServiceCollection AddDatabaseConfiguration(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
 
@@ -37,7 +35,6 @@ public static class DbContextExtensions
         });
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddScoped<ITokenGenerator, JwtProvider>();
 
         services.Scan(scan => scan
             .FromAssemblyOf<AppDbContext>()

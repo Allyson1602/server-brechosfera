@@ -5,23 +5,22 @@ using Brechosfera.Application.Requests;
 using Brechosfera.Application.Responses;
 using Brechosfera.Domain.Abstractions;
 using Brechosfera.Domain.Entities;
-using Brechosfera.Domain.Repositories;
 
 namespace Brechosfera.Application.Services;
 
 public class PostService : BaseService, IPostService
 {
     private readonly IRepository<Post> _repository;
-    private readonly IUserCredentialRepository _userRepository;
+    private readonly ICurrentUser _currentUser;
 
     public PostService(
         IUnitOfWork unitOfWork,
         INotifier notifier,
         IRepository<Post> repository,
-        IUserCredentialRepository userRepository
+        ICurrentUser currentUser
     ) : base(unitOfWork, notifier) {
         _repository = repository;
-        _userRepository = userRepository;
+        _currentUser = currentUser;
     }
 
     public async Task<bool> DeletePostAsync(Guid id, CancellationToken cancellationToken)
@@ -100,16 +99,8 @@ public class PostService : BaseService, IPostService
 
     public async Task<PostResponse?> CreatePostAsync(CreatePostRequest request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByIdAsync(request.UserId, cancellationToken);
-
-        if (user is null)
-        {
-            Notify("UserId", "O usuário informado não foi encontrado.");
-            return null;
-        }
-
         var newPost = new Post(
-            request.UserId,
+            _currentUser.UserId,
             request.Description,
             request.Image
         );

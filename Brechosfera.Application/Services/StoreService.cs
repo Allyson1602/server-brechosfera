@@ -268,7 +268,7 @@ public class StoreService : BaseService, IStoreService
         var newPhones = request.Phones?.Select(x => new Phone(x.Number, x.IsPrimary)).ToList();
 
         Store newStore = new Store(
-            request.OwnerUserId,
+            _currentUser.UserId,
             request.Name,
             request.AveragePrice,
             request.LocalType,

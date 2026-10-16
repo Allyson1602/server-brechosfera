@@ -18,7 +18,6 @@ public class StoreController : ApiController
         _storeService = storeService;
     }
 
-    [Authorize]
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult<bool>> DeleteStore(Guid id, CancellationToken cancellationToken)
     {
@@ -30,7 +29,6 @@ public class StoreController : ApiController
         return NoContent();
     }
 
-    [Authorize]
     [HttpDelete("{id:guid}/social-media")]
     public async Task<ActionResult> RemoveSocialMedia(Guid id, [FromBody]RemoveSocialMediaRequest request, CancellationToken cancellationToken)
     {
@@ -42,7 +40,6 @@ public class StoreController : ApiController
         return NoContent();
     }
 
-    [Authorize]
     [HttpPost("{id:guid}/social-media")]
     public async Task<ActionResult> AddSocialMedia(Guid id, [FromBody]SocialMediaRequest request, CancellationToken cancellationToken)
     {
@@ -54,7 +51,6 @@ public class StoreController : ApiController
         return NoContent();
     }
 
-    [Authorize]
     [HttpDelete("{id:guid}/phone")]
     public async Task<ActionResult> RemovePhone(Guid id, [FromBody]RemovePhoneRequest request, CancellationToken cancellationToken)
     {
@@ -66,7 +62,6 @@ public class StoreController : ApiController
         return NoContent();
     }
 
-    [Authorize]
     [HttpPost("{id:guid}/phone")]
     public async Task<ActionResult> AddPhone(Guid id, [FromBody]PhoneRequest request, CancellationToken cancellationToken)
     {
@@ -78,7 +73,6 @@ public class StoreController : ApiController
         return NoContent();
     }
 
-    [Authorize]
     [HttpPut("{id:guid}/address")]
     public async Task<ActionResult> UpdateAddress(Guid id, [FromBody]AddressRequest request, CancellationToken cancellationToken)
     {
@@ -90,7 +84,6 @@ public class StoreController : ApiController
         return NoContent();
     }
 
-    [Authorize]
     [HttpPut("{id:guid}/product-types")]
     public async Task<ActionResult> UpdateProductTypes(Guid id, [FromBody]ReplaceStoreProductTypesRequest request, CancellationToken cancellationToken)
     {
@@ -113,6 +106,7 @@ public class StoreController : ApiController
         return Ok(result);
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<StoreResponse>>> ListStore(CancellationToken cancellationToken)
     {
@@ -121,6 +115,7 @@ public class StoreController : ApiController
         return Ok(result);
     }
 
+    [AllowAnonymous]
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<StoreResponse>> GetStoreById(Guid id, CancellationToken cancellationToken)
     {
@@ -132,7 +127,6 @@ public class StoreController : ApiController
         return Ok(result);
     }
 
-    [Authorize]
     [HttpPost]
     public async Task<ActionResult<StoreResponse>> CreateStore(CreateStoreRequest request, CancellationToken cancellationToken)
     {

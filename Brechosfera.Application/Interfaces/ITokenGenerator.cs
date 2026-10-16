@@ -1,8 +1,8 @@
-﻿using Brechosfera.Domain.Entities;
+﻿using Brechosfera.Application.Common;
 
 namespace Brechosfera.Application.Interfaces;
 
 public interface ITokenGenerator
 {
-    string Generate(UserCredential user);
+    (string Token, DateTime ExpiresAt) Generate(AuthUser user);
 }
