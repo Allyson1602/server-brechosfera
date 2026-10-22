@@ -14,6 +14,16 @@ public sealed class IdentityService(
     private const string InvalidCredentials = "Usuário ou senha inválidos.";
     private const string InvalidLink = "Link de confirmação inválido ou expirado.";
 
+    public async Task<AuthUser?> FindUnconfirmedByEmailAsync(string email)
+    {
+        var user = await userManager.FindByEmailAsync(email);
+
+        if (user is null || await userManager.IsEmailConfirmedAsync(user))
+            return null;
+
+        return await ToAuthUserAsync(user);
+    }
+
     public async Task<(Result Result, AuthUser? User)> RegisterAsync(RegisterUserRequest request)
     {
         var user = new ApplicationUser
@@ -40,12 +50,15 @@ public sealed class IdentityService(
         return WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
     }
 
-    public async Task<Result> ConfirmEmailAsync(Guid userId, string token)
+    public async Task<(Result Result, AuthUser? NewlyConfirmedUser)> ConfirmEmailAsync(Guid userId, string token)
     {
         var user = await userManager.FindByIdAsync(userId.ToString());
 
         if (user is null)
-            return Result.Failure([InvalidLink]);
+            return (Result.Failure([InvalidLink]), null);
+
+        if (user.EmailConfirmed)
+            return (Result.Success(), null);
 
         string decodedToken;
 
@@ -55,12 +68,15 @@ public sealed class IdentityService(
         }
         catch (FormatException)
         {
-            return Result.Failure([InvalidLink]);
+            return (Result.Failure([InvalidLink]), null);
         }
 
         var result = await userManager.ConfirmEmailAsync(user, decodedToken);
 
-        return result.Succeeded ? Result.Success() : Result.Failure([InvalidLink]);
+        if (!result.Succeeded)
+            return (Result.Failure([InvalidLink]), null);
+
+        return (Result.Success(), await ToAuthUserAsync(user));
     }
 
     public async Task<(Result Result, AuthUser? User)> CheckCredentialsAsync(string login, string password)
