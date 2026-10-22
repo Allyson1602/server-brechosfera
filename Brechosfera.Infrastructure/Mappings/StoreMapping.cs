@@ -17,7 +17,13 @@ public class StoreMapping : EntityMapping<Store>
             .HasMaxLength(150)
             .IsRequired();
 
-        builder.HasIndex(x => x.Name).IsUnique();
+        // Nome único apenas entre lojas ativas: lojas excluídas têm ActiveName = NULL,
+        // e o índice único do MariaDB aceita vários NULLs.
+        builder.Property<string?>("ActiveName")
+            .HasMaxLength(150)
+            .HasComputedColumnSql("CASE WHEN `DeletedAt` IS NULL THEN `Name` END", stored: true);
+
+        builder.HasIndex("ActiveName").IsUnique();
 
         builder.Property(x => x.OwnerUserId)
             .IsRequired();

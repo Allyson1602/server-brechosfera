@@ -221,7 +221,8 @@ public class StoreService : BaseService, IStoreService
             return null;
         }
 
-        var isExistsByName = await _repository.ExistsByNameAsync(request.Name, store.Id, cancellationToken);
+        var name = request.Name.Trim();
+        var isExistsByName = await _repository.ExistsByNameAsync(name, store.Id, cancellationToken);
 
         if (isExistsByName)
         {
@@ -230,7 +231,7 @@ public class StoreService : BaseService, IStoreService
         }
 
         store.UpdateDetails(
-            request.Name,
+            name,
             request.AveragePrice,
             request.LocalType,
             request.AverageQuantity,
@@ -286,7 +287,7 @@ public class StoreService : BaseService, IStoreService
 
         Store newStore = new Store(
             _currentUser.UserId,
-            request.Name,
+            name,
             request.AveragePrice,
             request.LocalType,
             productTypes,

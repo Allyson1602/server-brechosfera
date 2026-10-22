@@ -11,9 +11,7 @@ public class StoreRepository : Repository<Store>, IStoreRepository
 
     public async Task<bool> ExistsByNameAsync(string name, Guid? ignoreStoreId = null, CancellationToken cancellationToken = default)
     {
-        return await DbSet
-            .IgnoreQueryFilters()
-            .AnyAsync(x => x.Name == name && x.Id != ignoreStoreId, cancellationToken);
+        return await DbSet.AnyAsync(x => x.Name == name && x.Id != ignoreStoreId, cancellationToken);
     }
 
     public async Task<Store?> GetStoreByIdAsync (Guid id, CancellationToken cancellationToken)

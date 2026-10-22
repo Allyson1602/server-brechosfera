@@ -151,6 +151,12 @@ namespace Brechosfera.Infrastructure.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("Id");
 
+                    b.Property<string>("ActiveName")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150)")
+                        .HasComputedColumnSql("CASE WHEN `DeletedAt` IS NULL THEN `Name` END", true);
+
                     b.Property<decimal>("AveragePrice")
                         .HasColumnType("decimal(18,2)");
 
@@ -184,7 +190,7 @@ namespace Brechosfera.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
+                    b.HasIndex("ActiveName")
                         .IsUnique();
 
                     b.HasIndex("OwnerUserId");
