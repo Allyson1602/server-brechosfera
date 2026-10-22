@@ -221,6 +221,14 @@ public class StoreService : BaseService, IStoreService
             return null;
         }
 
+        var isExistsByName = await _repository.ExistsByNameAsync(request.Name, store.Id, cancellationToken);
+
+        if (isExistsByName)
+        {
+            Notify("Name", "Já existe uma loja com esse nome.");
+            return null;
+        }
+
         store.UpdateDetails(
             request.Name,
             request.AveragePrice,
@@ -253,6 +261,15 @@ public class StoreService : BaseService, IStoreService
 
     public async Task<StoreResponse?> CreateStoreAsync(CreateStoreRequest request, CancellationToken cancellationToken)
     {
+        var name = request.Name.Trim();
+        var isExistsByName = await _repository.ExistsByNameAsync(name, cancellationToken: cancellationToken);
+
+        if (isExistsByName)
+        {
+            Notify("Name", "Já existe uma loja com esse nome.");
+            return null;
+        }
+
         List<ProductType> productTypes = await _productTypeRepository.ListProductTypeByKeyAsync(request.ProductTypeKeys, cancellationToken);
         Address? newAddress = null;
 
