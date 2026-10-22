@@ -2,6 +2,7 @@
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
+using System.Threading.RateLimiting;
 
 namespace Brechosfera.Api;
 
@@ -16,6 +17,23 @@ public static class ApiServiceCollectionExtensions
                 .RequireAuthenticatedUser()
                 .Build()
         );
+
+        services.AddRateLimiter(options =>
+        {
+            options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+            options.AddPolicy("email-sending", httpContext =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "desconhecido",
+                    factory: _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 3,
+                        Window = TimeSpan.FromMinutes(15),
+                        QueueLimit = 0
+                    }
+                )
+            );
+        });
 
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(options =>
@@ -43,6 +61,7 @@ public static class ApiServiceCollectionExtensions
         });
 
         services.AddExceptionHandler<DomainExceptionHandler>();
+        services.AddExceptionHandler<ConflictExceptionHandler>();
         services.AddProblemDetails();
 
         return services;

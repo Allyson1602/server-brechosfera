@@ -12,12 +12,10 @@ public sealed class UserHandler(
     public async Task HandleAsync(UserMessage message, CancellationToken cancellationToken)
     {
         var nome = WebUtility.HtmlEncode(message.Name);
-        var link = WebUtility.HtmlEncode(message.ConfirmationLink);
 
         var html = $"""
             <h2>Olá, {nome}!</h2>
-            <p>Seu cadastro foi realizado com sucesso. Confirme seu e-mail para entrar:</p>
-            <p><a href="{link}">Confirmar e-mail</a></p>
+            <p>Seu e-mail foi confirmado e sua conta no Brechosfera está ativa. Boas compras!</p>
         """;
 
         await emailSender.SendAsync(message.Email, "Bem-vindo(a)!", html, cancellationToken);

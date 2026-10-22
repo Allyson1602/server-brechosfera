@@ -32,6 +32,7 @@ public static class ApplicationServiceCollectionExtensions
     public static IServiceCollection AddMessageHandlers(this IServiceCollection services)
     {
         services.AddScoped<IMessageHandler<UserMessage>, UserHandler>();
+        services.AddScoped<IMessageHandler<EmailConfirmationMessage>, EmailConfirmationHandler>();
         return services;
     }
 }

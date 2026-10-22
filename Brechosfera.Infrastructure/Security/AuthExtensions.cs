@@ -93,7 +93,8 @@ public static class AuthExtensions
         .AddRoles<ApplicationRole>()
         .AddEntityFrameworkStores<AppDbContext>()
         .AddSignInManager()
-        .AddDefaultTokenProviders();
+        .AddDefaultTokenProviders()
+        .AddErrorDescriber<PortugueseIdentityErrorDescriber>();
 
         return services;
     }

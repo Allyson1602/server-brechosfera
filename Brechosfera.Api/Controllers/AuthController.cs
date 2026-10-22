@@ -4,6 +4,7 @@ using Brechosfera.Application.Requests;
 using Brechosfera.Application.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Brechosfera.Api.Controllers;
 
@@ -15,6 +16,15 @@ public class AuthController : ApiController
     private readonly IAuthService _authService;
 
     public AuthController(INotifier notifier, IAuthService authService) : base(notifier) => _authService = authService;
+
+    [EnableRateLimiting("email-sending")]
+    [HttpPost("resend-confirmation")]
+    public async Task<IActionResult> ResendConfirmation(ResendConfirmationRequest request, CancellationToken cancellationToken)
+    {
+        await _authService.ResendConfirmationAsync(request, cancellationToken);
+
+        return Ok(new { message = "Se houver uma conta aguardando confirmação com esse e-mail, enviaremos um novo link." });
+    }
 
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterUserRequest request, CancellationToken cancellationToken)
@@ -28,9 +38,9 @@ public class AuthController : ApiController
     }
 
     [HttpGet("confirm-email")]
-    public async Task<IActionResult> ConfirmEmail([FromQuery] Guid userId, [FromQuery] string token)
+    public async Task<IActionResult> ConfirmEmail([FromQuery] Guid userId, [FromQuery] string token, CancellationToken cancellationToken)
     {
-        await _authService.ConfirmEmailAsync(userId, token);
+        await _authService.ConfirmEmailAsync(userId, token, cancellationToken);
 
         if (!IsValidOperation())
             return NotificationProblem();
