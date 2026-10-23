@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
 
 namespace Brechosfera.Infrastructure.Security;
@@ -71,6 +72,22 @@ public static class AuthExtensions
                     ),
 
                     ClockSkew = TimeSpan.Zero
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = async context =>
+                    {
+                        var userId = context.Principal?.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                        var userManager = context.HttpContext.RequestServices
+                            .GetRequiredService<UserManager<ApplicationUser>>();
+
+                        var user = userId is null ? null : await userManager.FindByIdAsync(userId);
+
+                        if (user is null || user.DeletedAt is not null || await userManager.IsLockedOutAsync(user))
+                            context.Fail("O usuário deste token não está mais ativo.");
+                    }
                 };
             });
 

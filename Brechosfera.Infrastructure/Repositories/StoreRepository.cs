@@ -9,6 +9,13 @@ public class StoreRepository : Repository<Store>, IStoreRepository
 {
     public StoreRepository(AppDbContext context) : base(context) { }
 
+    public async Task<IReadOnlyList<Store>> ListByOwnerAsync(Guid ownerUserId, CancellationToken cancellationToken)
+    {
+        return await DbSet
+            .Where(x => x.OwnerUserId == ownerUserId)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<bool> ExistsByNameAsync(string name, Guid? ignoreStoreId = null, CancellationToken cancellationToken = default)
     {
         return await DbSet.AnyAsync(x => x.Name == name && x.Id != ignoreStoreId, cancellationToken);
