@@ -5,25 +5,55 @@ using Brechosfera.Application.Messages;
 using Brechosfera.Application.Notifications;
 using Brechosfera.Application.Requests;
 using Brechosfera.Application.Responses;
+using Brechosfera.Domain.Abstractions;
+using Brechosfera.Domain.Repositories;
 using Microsoft.Extensions.Options;
 
 namespace Brechosfera.Application.Services;
 
 public sealed class AuthService(
+    IStoreRepository storeRepository,
     IIdentityService identity,
     ITokenGenerator tokenGenerator,
     IMessagePublisher publisher,
     INotifier notifier,
     ICurrentUser currentUser,
+    IUnitOfWork unitOfWork,
     IOptions<AppUrlSettings> appUrls
 ) : IAuthService {
     public async Task DeleteAccountAsync(CancellationToken cancellationToken)
     {
-        var (result, deletedUser) = await identity.DeleteAccountAsync(currentUser.UserId);
+        var userId = currentUser.UserId;
 
-        if (!result.Succeeded || deletedUser is null)
+        AuthUser? deletedUser = null;
+        Result? failure = null;
+
+        var committed = await unitOfWork.ExecuteInTransactionAsync(async () =>
         {
-            NotifyErrors("DeleteAccount", result);
+            var stores = await storeRepository.ListByOwnerAsync(userId, cancellationToken);
+
+            foreach (var store in stores)
+                store.MarkAsDeleted();
+
+            await unitOfWork.CommitAsync(cancellationToken);
+
+            var (result, user) = await identity.DeleteAccountAsync(userId);
+
+            if (!result.Succeeded || user is null)
+            {
+                failure = result;
+                return false;
+            }
+
+            deletedUser = user;
+            return true;
+        }, cancellationToken);
+
+        if (!committed || deletedUser is null)
+        {
+            if (failure is not null)
+                NotifyErrors("DeleteAccount", failure);
+
             return;
         }
 

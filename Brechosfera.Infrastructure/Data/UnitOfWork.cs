@@ -26,6 +26,30 @@ public class UnitOfWork : IUnitOfWork
         }
     }
 
+    public async Task<bool> ExecuteInTransactionAsync(Func<Task<bool>> operation, CancellationToken cancellationToken = default)
+    {
+        var strategy = _context.Database.CreateExecutionStrategy();
+
+        return await strategy.ExecuteAsync(async () =>
+        {
+            await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+
+            var success = await operation();
+
+            if (success)
+            {
+                await transaction.CommitAsync(cancellationToken);
+            }
+            else
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                _context.ChangeTracker.Clear();
+            }
+
+            return success;
+        });
+    }
+
     public void Dispose()
     {
         _context.Dispose();
