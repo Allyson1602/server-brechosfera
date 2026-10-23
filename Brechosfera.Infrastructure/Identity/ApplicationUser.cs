@@ -2,4 +2,7 @@
 
 namespace Brechosfera.Infrastructure.Identity;
 
-public sealed class ApplicationUser : IdentityUser<Guid> { }
+public sealed class ApplicationUser : IdentityUser<Guid>
+{
+    public DateTimeOffset? DeletedAt { get; set; }
+}

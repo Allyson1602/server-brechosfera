@@ -11,10 +11,10 @@ public sealed class UserHandler(
 ) : IMessageHandler<UserMessage> {
     public async Task HandleAsync(UserMessage message, CancellationToken cancellationToken)
     {
-        var nome = WebUtility.HtmlEncode(message.Name);
+        var name = WebUtility.HtmlEncode(message.Name);
 
         var html = $"""
-            <h2>Olá, {nome}!</h2>
+            <h2>Olá, {name}!</h2>
             <p>Seu e-mail foi confirmado e sua conta no Brechosfera está ativa. Boas compras!</p>
         """;
 

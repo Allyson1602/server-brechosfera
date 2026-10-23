@@ -10,7 +10,7 @@ public sealed class EmailConfirmationHandler(
     ILogger<EmailConfirmationHandler> logger
 ) : IMessageHandler<EmailConfirmationMessage>
 {
-    public async Task HandleAsync (EmailConfirmationMessage message, CancellationToken cancellationToken)
+    public async Task HandleAsync(EmailConfirmationMessage message, CancellationToken cancellationToken)
     {
         var nome = WebUtility.HtmlEncode(message.Name);
         var link = WebUtility.HtmlEncode(message.ConfirmationLink);

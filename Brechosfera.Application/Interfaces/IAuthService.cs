@@ -5,6 +5,7 @@ namespace Brechosfera.Application.Interfaces;
 
 public interface IAuthService
 {
+    Task DeleteAccountAsync(CancellationToken cancellationToken);
     Task ResendConfirmationAsync(ResendConfirmationRequest request, CancellationToken cancellationToken);
     Task<Guid?> RegisterAsync(RegisterUserRequest request, CancellationToken cancellationToken);
     Task<bool> ConfirmEmailAsync(Guid userId, string token, CancellationToken cancellationToken);

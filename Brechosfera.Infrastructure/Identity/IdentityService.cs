@@ -14,6 +14,31 @@ public sealed class IdentityService(
     private const string InvalidCredentials = "Usuário ou senha inválidos.";
     private const string InvalidLink = "Link de confirmação inválido ou expirado.";
 
+    public async Task<(Result Result, AuthUser? User)> DeleteAccountAsync(Guid id)
+    {
+        var user = await userManager.FindByIdAsync(id.ToString());
+
+        if (user is null || user.DeletedAt is not null)
+            return (Result.Failure(["Usuário não encontrado."]), null);
+
+        var deletedUser = await ToAuthUserAsync(user);
+
+        user.DeletedAt = DateTimeOffset.UtcNow;
+        user.UserName = $"deleted-{user.Id:N}";
+        user.Email = $"{user.Id:N}@deleted.brechosfera.local";
+        user.EmailConfirmed = false;
+        user.PhoneNumber = null;
+        user.LockoutEnabled = true;
+        user.LockoutEnd = DateTimeOffset.MaxValue;
+
+        var result = await userManager.UpdateAsync(user);
+
+        if (!result.Succeeded)
+            return (Result.Failure(result.Errors.Select(e => e.Description)), null);
+
+        return (Result.Success(), deletedUser);
+    }
+
     public async Task<AuthUser?> FindUnconfirmedByEmailAsync(string email)
     {
         var user = await userManager.FindByEmailAsync(email);

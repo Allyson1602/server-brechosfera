@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.RateLimiting;
 
 namespace Brechosfera.Api.Controllers;
 
-[AllowAnonymous]
 [Route("api/auth")]
 [Produces("application/json")]
 public class AuthController : ApiController
@@ -17,6 +16,19 @@ public class AuthController : ApiController
 
     public AuthController(INotifier notifier, IAuthService authService) : base(notifier) => _authService = authService;
 
+    [Authorize]
+    [HttpDelete("me")]
+    public async Task<IActionResult> DeleteAccount([FromQuery] Guid id, CancellationToken cancellationToken)
+    {
+        await _authService.DeleteAccountAsync(cancellationToken);
+
+        if (!IsValidOperation())
+            return NotificationProblem();
+
+        return NoContent();
+    }
+
+    [AllowAnonymous]
     [EnableRateLimiting("email-sending")]
     [HttpPost("resend-confirmation")]
     public async Task<IActionResult> ResendConfirmation(ResendConfirmationRequest request, CancellationToken cancellationToken)
@@ -26,6 +38,7 @@ public class AuthController : ApiController
         return Ok(new { message = "Se houver uma conta aguardando confirmação com esse e-mail, enviaremos um novo link." });
     }
 
+    [AllowAnonymous]
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterUserRequest request, CancellationToken cancellationToken)
     {
@@ -37,6 +50,7 @@ public class AuthController : ApiController
         return Ok(new { userId, message = "Cadastro realizado. Enviamos um link de confirmação para o seu e-mail." });
     }
 
+    [AllowAnonymous]
     [HttpGet("confirm-email")]
     public async Task<IActionResult> ConfirmEmail([FromQuery] Guid userId, [FromQuery] string token, CancellationToken cancellationToken)
     {
@@ -48,6 +62,7 @@ public class AuthController : ApiController
         return Ok(new { message = "E-mail confirmado. Você já pode entrar." });
     }
 
+    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
     {

@@ -5,6 +5,7 @@ namespace Brechosfera.Application.Interfaces;
 
 public interface IIdentityService
 {
+    Task<(Result Result, AuthUser? User)> DeleteAccountAsync(Guid userId);
     Task<AuthUser?> FindUnconfirmedByEmailAsync(string email);
     Task<(Result Result, AuthUser? User)> RegisterAsync(RegisterUserRequest request);
     Task<string> GenerateEmailConfirmationTokenAsync(Guid userId);

@@ -14,8 +14,26 @@ public sealed class AuthService(
     ITokenGenerator tokenGenerator,
     IMessagePublisher publisher,
     INotifier notifier,
+    ICurrentUser currentUser,
     IOptions<AppUrlSettings> appUrls
 ) : IAuthService {
+    public async Task DeleteAccountAsync(CancellationToken cancellationToken)
+    {
+        var (result, deletedUser) = await identity.DeleteAccountAsync(currentUser.UserId);
+
+        if (!result.Succeeded || deletedUser is null)
+        {
+            NotifyErrors("DeleteAccount", result);
+            return;
+        }
+
+        await publisher.PublishAsync(
+            Queues.UserDeleted,
+            new UserDeletedMessage(deletedUser.Id, deletedUser.UserName, deletedUser.Email),
+            cancellationToken
+        );
+    }
+
     public async Task ResendConfirmationAsync(ResendConfirmationRequest request, CancellationToken cancellationToken)
     {
         var user = await identity.FindUnconfirmedByEmailAsync(request.Email);
