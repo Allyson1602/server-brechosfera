@@ -17,9 +17,11 @@ public class StoreService : BaseService, IStoreService
     private readonly IProductTypeRepository _productTypeRepository;
     private readonly IIdentityService _identity;
     private readonly ICurrentUser _currentUser;
+    private readonly StoreDeletion _storeDeletion;
     private readonly IMessagePublisher _publisher;
 
     public StoreService(
+        StoreDeletion storeDeletion,
         IMessagePublisher publisher,
         IUnitOfWork unitOfWork,
         INotifier notifier,
@@ -28,6 +30,7 @@ public class StoreService : BaseService, IStoreService
         IProductTypeRepository productTypeRepository,
         ICurrentUser currentUser
     ) : base(unitOfWork, notifier) {
+        _storeDeletion = storeDeletion;
         _identity = identity;
         _publisher = publisher;
         _repository = repository;
@@ -58,7 +61,7 @@ public class StoreService : BaseService, IStoreService
             return false;
         }
 
-        store.MarkAsDeleted();
+        await _storeDeletion.MarkAsDeletedAsync([store], cancellationToken);
 
         var success = await CommitAsync(cancellationToken);
 

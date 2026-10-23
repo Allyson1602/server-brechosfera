@@ -12,6 +12,7 @@ using Microsoft.Extensions.Options;
 namespace Brechosfera.Application.Services;
 
 public sealed class AuthService(
+    StoreDeletion storeDeletion,
     IStoreRepository storeRepository,
     IIdentityService identity,
     ITokenGenerator tokenGenerator,
@@ -33,7 +34,7 @@ public sealed class AuthService(
             var stores = await storeRepository.ListByOwnerAsync(userId, cancellationToken);
 
             foreach (var store in stores)
-                store.MarkAsDeleted();
+                await storeDeletion.MarkAsDeletedAsync(stores, cancellationToken);
 
             await unitOfWork.CommitAsync(cancellationToken);
 

@@ -18,6 +18,7 @@ public static class ApplicationServiceCollectionExtensions
 
         services.AddScoped<INotifier, Notifier>();
 
+        services.AddScoped<StoreDeletion>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IStoreService, StoreService>();
         services.AddScoped<IStoreReviewService, StoreReviewService>();
