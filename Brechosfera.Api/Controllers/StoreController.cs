@@ -18,10 +18,11 @@ public class StoreController : ApiController
         _storeService = storeService;
     }
 
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [HttpDelete("{id:guid}")]
-    public async Task<ActionResult<bool>> DeleteStore(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult> DeleteStore(Guid id, CancellationToken cancellationToken)
     {
-        var result = await _storeService.DeleteStoreAsync(id, cancellationToken);
+        await _storeService.DeleteStoreAsync(id, cancellationToken);
 
         if (!IsValidOperation())
             return NotificationProblem();

@@ -1,5 +1,6 @@
 ﻿using Brechosfera.Application.Interfaces;
 using Brechosfera.Application.Mapper;
+using Brechosfera.Application.Messages;
 using Brechosfera.Application.Notifications;
 using Brechosfera.Application.Requests;
 using Brechosfera.Application.Responses;
@@ -14,41 +15,46 @@ public class StoreService : BaseService, IStoreService
 {
     private readonly IStoreRepository _repository;
     private readonly IProductTypeRepository _productTypeRepository;
+    private readonly IIdentityService _identity;
     private readonly ICurrentUser _currentUser;
+    private readonly IMessagePublisher _publisher;
 
     public StoreService(
+        IMessagePublisher publisher,
         IUnitOfWork unitOfWork,
         INotifier notifier,
+        IIdentityService identity,
         IStoreRepository repository,
         IProductTypeRepository productTypeRepository,
         ICurrentUser currentUser
     ) : base(unitOfWork, notifier) {
+        _identity = identity;
+        _publisher = publisher;
         _repository = repository;
         _productTypeRepository = productTypeRepository;
         _currentUser = currentUser;
     }
 
-    public async Task<bool> DeleteStoreAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<bool> DeleteStoreAsync(Guid storeId, CancellationToken cancellationToken)
     {
-        var store = await _repository.GetByIdAsync(id);
+        var store = await _repository.GetByIdAsync(storeId, cancellationToken);
 
         if (store is null)
         {
             Notify(
                 "StoreId",
-                "A loja informado não foi encontrado."
+                "A loja informado não foi encontrada."
             );
 
             return false;
         }
 
-        if (store.DeletedAt.HasValue)
+        if (!store.CheckIsOwnedBy(_currentUser.UserId))
         {
             Notify(
-                "DeleteStore",
-                "A loja já foi deletada."
+                "StoreAccessDenied",
+                "Você não tem permissão para excluir esta loja."
             );
-
             return false;
         }
 
@@ -56,7 +62,21 @@ public class StoreService : BaseService, IStoreService
 
         var success = await CommitAsync(cancellationToken);
 
-        return success;
+        if (!success)
+            return false;
+
+        var owner = await _identity.GetByIdAsync(store.OwnerUserId);
+
+        if (owner is not null)
+        {
+            await _publisher.PublishAsync(
+                Queues.StoreDeleted,
+                new StoreDeletedMessage(owner.Id, owner.UserName, store.Name, owner.Email),
+                cancellationToken
+            );
+        }
+
+        return true;
     }
 
     public async Task RemoveSocialMediaAsync(Guid id, RemoveSocialMediaRequest request, CancellationToken cancellationToken)

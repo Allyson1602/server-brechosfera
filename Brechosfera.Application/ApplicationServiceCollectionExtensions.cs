@@ -31,6 +31,7 @@ public static class ApplicationServiceCollectionExtensions
 
     public static IServiceCollection AddMessageHandlers(this IServiceCollection services)
     {
+        services.AddScoped<IMessageHandler<StoreDeletedMessage>, StoreDeletedHandler>();
         services.AddScoped<IMessageHandler<UserDeletedMessage>, UserDeletedHandler>();
         services.AddScoped<IMessageHandler<UserMessage>, UserHandler>();
         services.AddScoped<IMessageHandler<EmailConfirmationMessage>, EmailConfirmationHandler>();
