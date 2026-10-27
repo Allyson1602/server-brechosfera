@@ -33,8 +33,7 @@ public sealed class AuthService(
         {
             var stores = await storeRepository.ListByOwnerAsync(userId, cancellationToken);
 
-            foreach (var store in stores)
-                await storeDeletion.MarkAsDeletedAsync(stores, cancellationToken);
+            await storeDeletion.MarkAsDeletedAsync(stores, cancellationToken);
 
             await unitOfWork.CommitAsync(cancellationToken);
 
