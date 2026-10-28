@@ -10,4 +10,11 @@ public class ProductType : Entity
     public EProductTypeCategory Category { get; private set; }
 
     private ProductType() { }
+
+    internal ProductType(string key, string label, EProductTypeCategory category)
+    {
+        Key = key;
+        Label = label;
+        Category = category;
+    }
 }

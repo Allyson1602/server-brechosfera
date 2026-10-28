@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.11.12324.101 stable
+VisualStudioVersion = 18.11.12324.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brechosfera.Domain", "Brechosfera.Domain\Brechosfera.Domain.csproj", "{BC9BFAFA-2DC4-4E9D-97E8-F8337FE22FC6}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brechosfera.Domain.Tests", "tests\Brechosfera.Domain.Tests\Brechosfera.Domain.Tests.csproj", "{684AEF44-4C46-423A-B009-BE912A52C968}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B2C75A71-1055-4BD2-90F9-B4BA497726C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brechosfera.Application.Tests", "tests\Brechosfera.Application.Tests\Brechosfera.Application.Tests.csproj", "{A1B4B944-0DCB-136B-77A5-439A5ABFA1BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,12 +101,25 @@ Global
 		{684AEF44-4C46-423A-B009-BE912A52C968}.Release|x64.Build.0 = Release|Any CPU
 		{684AEF44-4C46-423A-B009-BE912A52C968}.Release|x86.ActiveCfg = Release|Any CPU
 		{684AEF44-4C46-423A-B009-BE912A52C968}.Release|x86.Build.0 = Release|Any CPU
+		{A1B4B944-0DCB-136B-77A5-439A5ABFA1BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1B4B944-0DCB-136B-77A5-439A5ABFA1BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1B4B944-0DCB-136B-77A5-439A5ABFA1BD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A1B4B944-0DCB-136B-77A5-439A5ABFA1BD}.Debug|x64.Build.0 = Debug|Any CPU
+		{A1B4B944-0DCB-136B-77A5-439A5ABFA1BD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A1B4B944-0DCB-136B-77A5-439A5ABFA1BD}.Debug|x86.Build.0 = Debug|Any CPU
+		{A1B4B944-0DCB-136B-77A5-439A5ABFA1BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1B4B944-0DCB-136B-77A5-439A5ABFA1BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1B4B944-0DCB-136B-77A5-439A5ABFA1BD}.Release|x64.ActiveCfg = Release|Any CPU
+		{A1B4B944-0DCB-136B-77A5-439A5ABFA1BD}.Release|x64.Build.0 = Release|Any CPU
+		{A1B4B944-0DCB-136B-77A5-439A5ABFA1BD}.Release|x86.ActiveCfg = Release|Any CPU
+		{A1B4B944-0DCB-136B-77A5-439A5ABFA1BD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{684AEF44-4C46-423A-B009-BE912A52C968} = {B2C75A71-1055-4BD2-90F9-B4BA497726C3}
+		{A1B4B944-0DCB-136B-77A5-439A5ABFA1BD} = {B2C75A71-1055-4BD2-90F9-B4BA497726C3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {87C37F00-A04E-41A8-94CD-60A2D8310A38}
