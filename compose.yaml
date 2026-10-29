@@ -1,0 +1,67 @@
+services:
+  mariadb:
+    image: mariadb:11.4
+    container_name: brechosfera-mariadb
+    environment:
+      - MARIADB_ROOT_PASSWORD=root123
+      - MARIADB_DATABASE=brechosfera
+    ports:
+      - "3307:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: brechosfera-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: . # contexto = raiz da solução
+      dockerfile: Brechosfera.Api/Dockerfile # caminho relativo ao context
+    image: brechosfera-api # nome da imagem gerada
+    container_name: brechosfera-api
+    ports:
+      - "8080:8080" # sua máquina : container
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=mariadb;Port=3306;Database=brechosfera;User=root;Password=root123
+      - RabbitMQ__Host=rabbitmq
+      - Jwt__Key=${JWT_KEY}
+      - Jwt__ExpirationHours=${JWT_EXPIRATION_HOURS}
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  worker:
+    build:
+      context: .
+      dockerfile: Brechosfera.Worker/Dockerfile
+    image: brechosfera-worker
+    container_name: brechosfera-worker
+    environment:
+      - DOTNET_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=mariadb;Port=3306;Database=brechosfera;User=root;Password=root123
+      - RabbitMQ__Host=rabbitmq
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+volumes:
+  mariadb_data:
