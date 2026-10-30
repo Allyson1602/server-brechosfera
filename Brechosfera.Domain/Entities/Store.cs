@@ -172,6 +172,9 @@ public class Store : Entity, IAggregateRoot
     {
         Guard.AgainstNull(socialMedia, "SOCIAL_MEDIA_EMPTY", "A rede social não pode ser nula.");
 
+        if (_socialMedia.Any(s => s.Link == socialMedia.Link))
+            return;
+
         _socialMedia.Add(socialMedia);
     }
 
@@ -232,6 +235,7 @@ public class Store : Entity, IAggregateRoot
     {
         Guard.AgainstNull(phone, "PHONE_EMPTY", "O celular não pode ser nulo.");
         Guard.AgainstMaxCount(_phones.Count + 1, MaxPhonesLimit, "STORE_PHONE_LIMIT_EXCEEDED", $"A loja já atingiu o limite de {MaxPhonesLimit} celulares.");
+        Guard.AgainstDuplicate(_phones, p => p.Number == phone.Number, "STORE_PHONE_DUPLICATED", "O celular já existe.");
 
         if (_phones.Count == 0 || phone.IsPrimary)
             SetPrimaryPhone(phone);

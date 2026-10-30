@@ -1,11 +1,14 @@
-﻿using Brechosfera.Application.Interfaces;
+﻿using Brechosfera.Application.Common;
+using Brechosfera.Application.Interfaces;
 using Brechosfera.Application.Messages;
 using Brechosfera.Application.Notifications;
+using Brechosfera.Application.Requests;
 using Brechosfera.Application.Services;
+using Brechosfera.Application.Tests.Factories;
 using Brechosfera.Domain.Abstractions;
+using Brechosfera.Domain.Entities;
 using Brechosfera.Domain.Repositories;
 using NSubstitute;
-using Brechosfera.Application.Tests.Factories;
 
 namespace Brechosfera.Application.Tests;
 
@@ -31,6 +34,56 @@ public class StoreServiceTests
             productTypeRepository: Substitute.For<IProductTypeRepository>(),
             currentUser: _currentUser,
             storeDeletion: new StoreDeletion(_eventRepository)
+        );
+    }
+
+    [Fact]
+    public async Task CreateStoreAsync_WhenNameAlreadyExists_DoesNotCreateStore()
+    {
+        _storeRepository.ExistsByNameAsync("Brechó Aurora", Arg.Any<Guid?>(), Arg.Any<CancellationToken>()).Returns(true);
+
+        var request = new CreateStoreRequest(
+            Name: " Brechó Aurora ",
+            AveragePrice: 50m,
+            LocalType: Domain.Enums.ELocalType.Physical,
+            ProductTypeKeys: ["camisetas"],
+            AverageQuantity: null,
+            Description: null,
+            Address: null,
+            SocialMedia: null,
+            Phones: null
+        );
+
+        var result = await _service.CreateStoreAsync(request, CancellationToken.None);
+
+        Assert.Null(result);
+        Assert.Contains(_notifier.GetNotifications(), n => n.Code == "Name");
+        _storeRepository.DidNotReceive().Add(Arg.Any<Store>());
+    }
+
+    [Fact]
+    public async Task DeleteStoreAsync_WhenUserIsOwner_DeletesStoreAndNotifiesOwner()
+    {
+        var ownerId = Guid.NewGuid();
+        var store = StoreFactory.Create(ownerUserId: ownerId);
+        var owner = new AuthUser(ownerId, "ana", "ana@email.com", []);
+
+        _storeRepository.GetByIdAsync(store.Id, Arg.Any<CancellationToken>()).Returns(store);
+        _currentUser.UserId.Returns(ownerId);
+        _unitOfWork.CommitAsync(Arg.Any<CancellationToken>()).Returns(true);
+        _identity.GetByIdAsync(ownerId).Returns(owner);
+        _eventRepository.ListByStoreIdsAsync(Arg.Any<IReadOnlyCollection<Guid>>(), Arg.Any<CancellationToken>()).Returns(new List<Event>());
+
+        var result = await _service.DeleteStoreAsync(store.Id, CancellationToken.None);
+
+        Assert.True(result);
+        Assert.NotNull(store.DeletedAt);
+        Assert.False(_notifier.HasNotifications());
+
+        await _publisher.Received(1).PublishAsync(
+            Queues.StoreDeleted,
+            Arg.Is<StoreDeletedMessage>(m => m.Email == "ana@email.com" && m.StoreName == store.Name),
+            Arg.Any<CancellationToken>()
         );
     }
 

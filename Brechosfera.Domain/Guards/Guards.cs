@@ -5,6 +5,12 @@ namespace Brechosfera.Domain.Guards;
 
 public static class Guard
 {
+    public static void AgainstDuplicate<T>(IEnumerable<T> items, Func<T, bool> isDuplicate, string code, string message)
+    {
+        if (items.Any(isDuplicate))
+            throw new DomainException(code, message);
+    }
+
     public static void AgainstInvalidDateRange(
         DateTimeOffset startDate,
         DateTimeOffset endDate,
