@@ -69,8 +69,8 @@ public class PostService : BaseService, IPostService
         }
 
         post.UpdatePost(
-            request.Image,
-            request.Description
+            description: request.Description,
+            image: request.Image
         );
 
         post.MarkAsUpdated();

@@ -25,13 +25,12 @@ public class Post : Entity
 
         UserId = userId;
         Description = description;
-        Image = image;
+        Image = string.IsNullOrWhiteSpace(image) ? null : image;
     }
 
-    public void UpdatePost(string image, string description)
+    public void UpdatePost(string description, string? image = null)
     {
         Guard.AgainstNullOrWhiteSpace(description, "DESCRIPTION_EMPTY", "A descrição não pode ser nula.");
-        Guard.AgainstNullOrWhiteSpace(image, "IMAGE_EMPTY", "A imagem não pode ser nula.");
 
         Description = description;
         Image = image;

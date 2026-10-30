@@ -19,8 +19,8 @@ public class StoreReview : Entity
         Rating rating,
         string? comment
     ) {
-        Guard.AgainstEmptyGuid(userId, "REVIEW_STORE_NOT_FOUND", "A loja e obrigatória.");
-        Guard.AgainstEmptyGuid(storeId, "REVIEW_USER_NOT_FOUND", "O usuário é obrigatório.");
+        Guard.AgainstEmptyGuid(storeId, "REVIEW_STORE_NOT_FOUND", "A loja é obrigatória.");
+        Guard.AgainstEmptyGuid(userId, "REVIEW_USER_NOT_FOUND", "O usuário é obrigatório.");
         Guard.AgainstNullMaxLength(comment, 500, "REVIEW_COMMENT_MAX_LIMIT", "O comentário não pode exceder 500 caracteres.");
 
         UserId = userId;

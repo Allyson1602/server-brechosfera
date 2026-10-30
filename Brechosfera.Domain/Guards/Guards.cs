@@ -89,7 +89,7 @@ public static class Guard
 
     public static void AgainstNullMaxLength(string? value, int max, string code, string message)
     {
-        if (value is null || value.Length > max)
+        if (value is not null && value.Length > max)
             throw new DomainException(code, message);
     }
 
