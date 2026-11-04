@@ -15,9 +15,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brechosfera.Worker", "Brech
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brechosfera.Domain.Tests", "tests\Brechosfera.Domain.Tests\Brechosfera.Domain.Tests.csproj", "{684AEF44-4C46-423A-B009-BE912A52C968}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B2C75A71-1055-4BD2-90F9-B4BA497726C3}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{B2C75A71-1055-4BD2-90F9-B4BA497726C3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brechosfera.Application.Tests", "tests\Brechosfera.Application.Tests\Brechosfera.Application.Tests.csproj", "{A1B4B944-0DCB-136B-77A5-439A5ABFA1BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brechosfera.Tests.Common", "Tests\Brechosfera.Tests.Common\Brechosfera.Tests.Common.csproj", "{BCC703A7-E1F1-4094-8F3F-27B5E2D86930}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -113,6 +115,18 @@ Global
 		{A1B4B944-0DCB-136B-77A5-439A5ABFA1BD}.Release|x64.Build.0 = Release|Any CPU
 		{A1B4B944-0DCB-136B-77A5-439A5ABFA1BD}.Release|x86.ActiveCfg = Release|Any CPU
 		{A1B4B944-0DCB-136B-77A5-439A5ABFA1BD}.Release|x86.Build.0 = Release|Any CPU
+		{BCC703A7-E1F1-4094-8F3F-27B5E2D86930}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCC703A7-E1F1-4094-8F3F-27B5E2D86930}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCC703A7-E1F1-4094-8F3F-27B5E2D86930}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BCC703A7-E1F1-4094-8F3F-27B5E2D86930}.Debug|x64.Build.0 = Debug|Any CPU
+		{BCC703A7-E1F1-4094-8F3F-27B5E2D86930}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BCC703A7-E1F1-4094-8F3F-27B5E2D86930}.Debug|x86.Build.0 = Debug|Any CPU
+		{BCC703A7-E1F1-4094-8F3F-27B5E2D86930}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCC703A7-E1F1-4094-8F3F-27B5E2D86930}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCC703A7-E1F1-4094-8F3F-27B5E2D86930}.Release|x64.ActiveCfg = Release|Any CPU
+		{BCC703A7-E1F1-4094-8F3F-27B5E2D86930}.Release|x64.Build.0 = Release|Any CPU
+		{BCC703A7-E1F1-4094-8F3F-27B5E2D86930}.Release|x86.ActiveCfg = Release|Any CPU
+		{BCC703A7-E1F1-4094-8F3F-27B5E2D86930}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -120,6 +134,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{684AEF44-4C46-423A-B009-BE912A52C968} = {B2C75A71-1055-4BD2-90F9-B4BA497726C3}
 		{A1B4B944-0DCB-136B-77A5-439A5ABFA1BD} = {B2C75A71-1055-4BD2-90F9-B4BA497726C3}
+		{BCC703A7-E1F1-4094-8F3F-27B5E2D86930} = {B2C75A71-1055-4BD2-90F9-B4BA497726C3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {87C37F00-A04E-41A8-94CD-60A2D8310A38}

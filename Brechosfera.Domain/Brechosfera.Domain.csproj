@@ -9,6 +9,7 @@
   <ItemGroup>
 	  <InternalsVisibleTo Include="Brechosfera.Domain.Tests" />
 	  <InternalsVisibleTo Include="Brechosfera.Application.Tests" />
+	  <InternalsVisibleTo Include="Brechosfera.Tests.Common" />
   </ItemGroup>
 
 </Project>

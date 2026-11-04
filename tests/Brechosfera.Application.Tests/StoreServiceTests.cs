@@ -4,10 +4,10 @@ using Brechosfera.Application.Messages;
 using Brechosfera.Application.Notifications;
 using Brechosfera.Application.Requests;
 using Brechosfera.Application.Services;
-using Brechosfera.Application.Tests.Factories;
 using Brechosfera.Domain.Abstractions;
 using Brechosfera.Domain.Entities;
 using Brechosfera.Domain.Repositories;
+using Brechosfera.Tests.Common.Factories;
 using NSubstitute;
 
 namespace Brechosfera.Application.Tests;

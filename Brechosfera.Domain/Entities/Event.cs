@@ -10,7 +10,7 @@ public class Event : Entity, IAggregateRoot
     public string Name { get; private set; } = string.Empty;
     public string Description { get; private set; } = string.Empty;
     public string OrganizerName { get; private set; } = string.Empty;
-    public Address Address { get; private set; }
+    public Address Address { get; private set; } = null!;
     public DateTimeOffset StartDate { get; private set; }
     public DateTimeOffset EndDate { get; private set; }
     public Guid ResponsibleStoreId { get; }

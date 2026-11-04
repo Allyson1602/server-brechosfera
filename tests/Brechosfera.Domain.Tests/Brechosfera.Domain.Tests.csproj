@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Brechosfera.Domain\Brechosfera.Domain.csproj" />
+    <ProjectReference Include="..\Brechosfera.Tests.Common\Brechosfera.Tests.Common.csproj" />
   </ItemGroup>
 
 </Project>

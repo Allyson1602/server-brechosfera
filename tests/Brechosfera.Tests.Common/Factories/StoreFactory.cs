@@ -1,11 +1,14 @@
 ﻿using Brechosfera.Domain.Entities;
 using Brechosfera.Domain.Enums;
 
-namespace Brechosfera.Application.Tests.Factories;
+namespace Brechosfera.Tests.Common.Factories;
 
 public static class StoreFactory
 {
-    public static Store Create(Guid? ownerUserId = null, string name = "Brechó Teste") => new(
+    public static Store Create(
+        Guid? ownerUserId = null, 
+        string name = "Brechó Teste"
+    ) => new(
         ownerUserId: ownerUserId ?? Guid.NewGuid(),
         name: name,
         averagePrice: 50m,
