@@ -28,6 +28,8 @@ public class Post : Entity
         Image = string.IsNullOrWhiteSpace(image) ? null : image;
     }
 
+    public bool IsAuthoredBy(Guid userId) => UserId == userId;
+
     public void UpdatePost(string description, string? image = null)
     {
         Guard.AgainstNullOrWhiteSpace(description, "DESCRIPTION_EMPTY", "A descrição não pode ser nula.");

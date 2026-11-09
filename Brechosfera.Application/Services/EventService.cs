@@ -14,15 +14,18 @@ public class EventService : BaseService, IEventService
 {
     private readonly IEventRepository _repository;
     private readonly IStoreRepository _storeRepository;
+    private readonly ICurrentUser _currentUser;
 
     public EventService(
         IUnitOfWork unitOfWork,
         INotifier notifier,
+        ICurrentUser currentUser,
         IEventRepository repository,
         IStoreRepository storeRepository
     ) : base(unitOfWork, notifier) {
         _repository = repository;
         _storeRepository = storeRepository;
+        _currentUser = currentUser;
     }
 
     public async Task<bool> DeleteEventAsync(Guid id, CancellationToken cancellationToken)
@@ -34,6 +37,28 @@ public class EventService : BaseService, IEventService
             Notify(
                 "EventId",
                 "O evento informado não foi encontrado."
+            );
+
+            return false;
+        }
+
+        var store = await _storeRepository.GetByIdAsync(eventData.ResponsibleStoreId);
+
+        if (store is null)
+        {
+            Notify(
+                "StoreId",
+                "A loja não foi encontrada."
+            );
+
+            return false;
+        }
+
+        if (!store.CheckIsOwnedBy(_currentUser.UserId))
+        {
+            Notify(
+                "EventAccessDenied",
+                "Você não tem permissão para excluir o evento dessa loja."
             );
 
             return false;
@@ -65,6 +90,28 @@ public class EventService : BaseService, IEventService
             Notify(
                 "EventId",
                 "O evento informado não foi encontrado."
+            );
+
+            return null;
+        }
+
+        var store = await _storeRepository.GetByIdAsync(eventData.ResponsibleStoreId);
+
+        if (store is null)
+        {
+            Notify(
+                "StoreId",
+                "A loja não foi encontrada."
+            );
+
+            return null;
+        }
+
+        if (!store.CheckIsOwnedBy(_currentUser.UserId))
+        {
+            Notify(
+                "EventAccessDenied",
+                "Você não tem permissão para editar o evento dessa loja."
             );
 
             return null;
@@ -125,13 +172,23 @@ public class EventService : BaseService, IEventService
 
     public async Task<EventResponse?> CreateEventAsync(CreateEventRequest request, CancellationToken cancellationToken)
     {
-        var store = await _storeRepository.GetByIdAsync(request.ResponsibleStoreId);
+        var store = await _storeRepository.GetByIdAsync(request.ResponsibleStoreId, cancellationToken);
 
         if (store is null)
         {
             Notify(
                 "ResponsibleStoreId",
                 "A loja informada não foi encontrada."
+            );
+
+            return null;
+        }
+
+        if (!store.CheckIsOwnedBy(_currentUser.UserId))
+        {
+            Notify(
+                "EventAccessDenied",
+                "Você não tem permissão para criar o evento para essa loja."
             );
 
             return null;

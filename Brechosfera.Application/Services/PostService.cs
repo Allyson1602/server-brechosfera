@@ -25,7 +25,7 @@ public class PostService : BaseService, IPostService
 
     public async Task<bool> DeletePostAsync(Guid id, CancellationToken cancellationToken)
     {
-        var post = await _repository.GetByIdAsync(id);
+        var post = await _repository.GetByIdAsync(id, cancellationToken);
 
         if (post is null)
         {
@@ -47,6 +47,16 @@ public class PostService : BaseService, IPostService
             return false;
         }
 
+        if (!post.IsAuthoredBy(_currentUser.UserId))
+        {
+            Notify(
+                "PostAccessDenied",
+                "Você não tem permissão para alterar este post."
+            );
+
+            return false;
+        }
+
         post.MarkAsDeleted();
 
         var success = await CommitAsync(cancellationToken);
@@ -63,6 +73,16 @@ public class PostService : BaseService, IPostService
             Notify(
                 "PostId",
                 "O post informado não foi encontrado."
+            );
+
+            return null;
+        }
+
+        if (!post.IsAuthoredBy(_currentUser.UserId))
+        {
+            Notify(
+                "PostAccessDenied",
+                "Você não tem permissão para alterar este post."
             );
 
             return null;

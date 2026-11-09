@@ -18,6 +18,26 @@ public class PostTests
     }
 
     [Fact]
+    public void IsAuthoredBy_WhenUserIdIsNotAuthor_ReturnsFalse()
+    {
+        var post = CreatePost(Guid.NewGuid());
+        var isAuthored = post.IsAuthoredBy(Guid.NewGuid());
+
+        Assert.False(isAuthored);
+    }
+
+    [Fact]
+    public void IsAuthoredBy_WhenUserIdAuthor_ReturnsTrue()
+    {
+        var userId = Guid.NewGuid();
+        var post = CreatePost(userId);
+
+        var isAuthored = post.IsAuthoredBy(userId);
+
+        Assert.True(isAuthored);
+    }
+
+    [Fact]
     public void Constructor_WhenUserIdIsEmpty_ThrowsDomainException()
     {
         var exception = Assert.Throws<DomainException>(() => CreatePost());
