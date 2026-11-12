@@ -196,5 +196,8 @@ public class EventServiceTests
 
         Assert.Contains(_notifier.GetNotifications(), n => n.Code == "EventAccessDenied");
         Assert.Null(storeEvent.DeletedAt);
+        Assert.False(result);
+
+        await _unitOfWork.DidNotReceive().CommitAsync(Arg.Any<CancellationToken>());
     }
 }

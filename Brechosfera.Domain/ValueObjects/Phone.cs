@@ -11,7 +11,7 @@ public sealed record Phone
 
     public Phone(string number, bool isPrimary = false)
     {
-        Guard.AgainstNullOrWhiteSpace(number, "PHONE_NOT_FOUND", "O número do celular é obrigatório.");
+        Guard.AgainstNullOrWhiteSpace(number, "PHONE_EMPTY", "O número do celular é obrigatório.");
         Guard.AgainstNonDigits(number, "PHONE_ONLY_NUMBERS", "O número do celular deve conter apenas dígitos numéricos.");
 
         Number = number;
