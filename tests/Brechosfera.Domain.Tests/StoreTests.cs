@@ -82,7 +82,7 @@ public class StoreTests
     }
 
     [Fact]
-    public void UpdateDetails_WithValidData_UpdatesAllFields()
+    public void UpdateDetails_WhenValidData_UpdatesAllFields()
     {
         var store = CreateStore();
 
@@ -102,7 +102,7 @@ public class StoreTests
     }
 
     [Fact]
-    public void ReplaceProductTypes_WithNewList_ReplacesAllProductTypes()
+    public void ReplaceProductTypes_WhenNewList_ReplacesAllProductTypes()
     {
         var store = CreateStore();
         var productType = new ProductType("maiô", "Maiô", EProductTypeCategory.Beachwear);
@@ -114,7 +114,7 @@ public class StoreTests
     }
 
     [Fact]
-    public void ReplaceProductTypes_WithDuplicatedItems_AddsOnlyOnce()
+    public void ReplaceProductTypes_WhenDuplicatedItems_AddsOnlyOnce()
     {
         var store = CreateStore();
         var productType = new ProductType("maiô", "Maiô", EProductTypeCategory.Beachwear);

@@ -9,7 +9,7 @@ public class EventTests
     private static readonly DateTimeOffset BaseDate = EventFactory.BaseDate;
 
     [Fact]
-    public void UpdateEvent_WithValidData_UpdatesAllFieldsExceptStore()
+    public void UpdateEvent_WhenValidData_UpdatesAllFieldsExceptStore()
     {
 
         var storeId = Guid.NewGuid();
@@ -83,7 +83,7 @@ public class EventTests
     }
 
     [Fact]
-    public void Constructor_WithValidData_CreatesEvent()
+    public void Constructor_WhenValidData_CreatesEvent()
     {
         var storeId = Guid.NewGuid();
         var address = AddressFactory.Create();
