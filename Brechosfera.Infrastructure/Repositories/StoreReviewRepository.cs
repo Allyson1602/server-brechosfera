@@ -9,6 +9,9 @@ public class StoreReviewRepository : Repository<StoreReview>, IStoreReviewReposi
 {
     public StoreReviewRepository(AppDbContext dbContext) : base(dbContext) { }
 
+    public Task<bool> ExistsByUserAndStoreAsync(Guid userId, Guid storeId, CancellationToken cancellationToken)
+    => DbSet.AnyAsync(r => r.UserId == userId && r.StoreId == storeId, cancellationToken);
+
     async public Task<IEnumerable<StoreReview>> ListStoreReviewByStoreIdAsync(Guid storeId, CancellationToken cancellationToken)
     {
         return await DbSet

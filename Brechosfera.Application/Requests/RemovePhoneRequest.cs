@@ -1,3 +1,3 @@
 ﻿namespace Brechosfera.Application.Requests;
 
-public sealed record RemovePhoneRequest(string phoneNumber);
+public sealed record RemovePhoneRequest(string PhoneNumber);

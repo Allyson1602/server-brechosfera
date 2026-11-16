@@ -1,11 +1,9 @@
-﻿using Brechosfera.Domain.ValueObjects;
-
-namespace Brechosfera.Application.Responses;
+﻿namespace Brechosfera.Application.Responses;
 
 public sealed record StoreReviewResponse(
     Guid Id,
-    Guid userId,
-    Guid storeId,
-    int rating,
-    string? comment
+    Guid UserId,
+    Guid StoreId,
+    int Rating,
+    string? Comment
 );

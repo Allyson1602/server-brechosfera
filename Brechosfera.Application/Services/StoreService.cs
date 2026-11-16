@@ -98,7 +98,7 @@ public class StoreService : BaseService, IStoreService
             return;
         }
 
-        store.RemoveSocialMedia(request.link);
+        store.RemoveSocialMedia(request.Link);
         await CommitAsync(cancellationToken);
     }
 
@@ -140,7 +140,7 @@ public class StoreService : BaseService, IStoreService
             return;
         }
 
-        store.RemovePhone(request.phoneNumber);
+        store.RemovePhone(request.PhoneNumber);
         await CommitAsync(cancellationToken);
     }
 
@@ -215,7 +215,7 @@ public class StoreService : BaseService, IStoreService
             return;
         }
 
-        var newProductTypeIds = request.productTypeIds.Distinct().ToList();
+        var newProductTypeIds = request.ProductTypeIds.Distinct().ToList();
         var productTypes = await _productTypeRepository.ListProductTypesByIdsAsync(newProductTypeIds, cancellationToken);
 
         if (productTypes.Count < 1)
@@ -241,6 +241,12 @@ public class StoreService : BaseService, IStoreService
         if (store is null)
         {
             Notify("STORE_NOT_FOUND", "A loja não foi encontrada.");
+            return null;
+        }
+
+        if (!store.CheckIsOwnedBy(_currentUser.UserId))
+        {
+            Notify("STORE_ACCESS_DENIED", "Você não tem permissão para alterar esta loja.");
             return null;
         }
 

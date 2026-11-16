@@ -6,7 +6,9 @@ using Brechosfera.Application.Requests;
 using Brechosfera.Application.Services;
 using Brechosfera.Domain.Abstractions;
 using Brechosfera.Domain.Entities;
+using Brechosfera.Domain.Enums;
 using Brechosfera.Domain.Repositories;
+using Brechosfera.Domain.ValueObjects;
 using Brechosfera.Tests.Common.Factories;
 using NSubstitute;
 
@@ -35,6 +37,49 @@ public class StoreServiceTests
             currentUser: _currentUser,
             storeDeletion: new StoreDeletion(_eventRepository)
         );
+    }
+
+    public static TheoryData<string, Func<StoreService, Guid, Task>> StoreChanges => new()
+    {
+        { "AddPhone",               (s, id) => s.AddPhoneAsync(id, new PhoneRequest("11999990001", false), CancellationToken.None) },
+        { "RemovePhone",            (s, id) => s.RemovePhoneAsync(id, new RemovePhoneRequest("11999990001"), CancellationToken.None) },
+        { "AddSocialMedia",         (s, id) => s.AddSocialMediaAsync(id, new SocialMediaRequest("@brecho", ESocialMediaPlatform.Instagram), CancellationToken.None) },
+        { "RemoveSocialMedia",      (s, id) => s.RemoveSocialMediaAsync(id, new RemoveSocialMediaRequest("@brecho"), CancellationToken.None) },
+        { "UpdateAddress",          (s, id) => s.UpdateAddressAsync(id, new AddressRequest("01001000", "Praça da Sé", "Sé", "São Paulo", "SP", "São Paulo", null), CancellationToken.None) },
+        { "UpdateProductTypes",     (s, id) => s.UpdateProductTypesAsync(id, new ReplaceStoreProductTypesRequest([Guid.NewGuid()]), CancellationToken.None) }, 
+        { "UpdateStore",            (s, id) => s.UpdateStoreAsync(id, new UpdateStoreRequest("Brechó Teste", 50m, ELocalType.Physical, null, null), CancellationToken.None) }
+    };
+
+    [Theory]
+    [MemberData(nameof(StoreChanges))]
+    public async Task StoreChange_WhenUserIsNotOwner_NotifiesAccessDenied(
+        string operation, Func<StoreService, Guid, Task> act)
+    {
+        var store = StoreFactory.Create(ownerUserId: Guid.NewGuid());
+
+        _storeRepository.GetStoreByIdAsync(store.Id, Arg.Any<CancellationToken>()).Returns(store);
+        _storeRepository.GetByIdAsync(store.Id, Arg.Any<CancellationToken>()).Returns(store);
+        _currentUser.UserId.Returns(Guid.NewGuid());
+
+        await act(_service, store.Id);
+
+        Assert.True(
+            _notifier.GetNotifications().Any(n => n.Code == "STORE_ACCESS_DENIED"),
+            $"{operation} não bloqueou um usuário que não é dono da loja.");
+
+        await _unitOfWork.DidNotReceive().CommitAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Theory]
+    [MemberData(nameof(StoreChanges))]
+    public async Task StoreChange_WhenStoreDoesNotExist_NotifiesStoreNotFound(
+        string operation, Func<StoreService, Guid, Task> act)
+    {
+        await act(_service, Guid.NewGuid());
+
+        Assert.True(
+            _notifier.GetNotifications().Any(n => n.Code == "STORE_NOT_FOUND"),
+            $"{operation} não notificou loja inexistente.");
     }
 
     [Fact]
