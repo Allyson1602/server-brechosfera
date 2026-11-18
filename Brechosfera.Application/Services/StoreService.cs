@@ -8,11 +8,14 @@ using Brechosfera.Domain.Abstractions;
 using Brechosfera.Domain.Entities;
 using Brechosfera.Domain.Repositories;
 using Brechosfera.Domain.ValueObjects;
+using Microsoft.Extensions.Caching.Distributed;
+using System.Text.Json;
 
 namespace Brechosfera.Application.Services;
 
 public class StoreService : BaseService, IStoreService
 {
+    private readonly IDistributedCache _cache;
     private readonly IStoreRepository _repository;
     private readonly IProductTypeRepository _productTypeRepository;
     private readonly IIdentityService _identity;
@@ -28,8 +31,10 @@ public class StoreService : BaseService, IStoreService
         IIdentityService identity,
         IStoreRepository repository,
         IProductTypeRepository productTypeRepository,
-        ICurrentUser currentUser
+        ICurrentUser currentUser,
+        IDistributedCache cache
     ) : base(unitOfWork, notifier) {
+        _cache = cache;
         _storeDeletion = storeDeletion;
         _identity = identity;
         _publisher = publisher;
@@ -79,6 +84,8 @@ public class StoreService : BaseService, IStoreService
             );
         }
 
+        await _cache.RemoveAsync($"store:{storeId}", cancellationToken);
+
         return true;
     }
 
@@ -99,7 +106,10 @@ public class StoreService : BaseService, IStoreService
         }
 
         store.RemoveSocialMedia(request.Link);
-        await CommitAsync(cancellationToken);
+        var success = await CommitAsync(cancellationToken);
+
+        if (success)
+            await _cache.RemoveAsync($"store:{id}", cancellationToken);
     }
 
     public async Task AddSocialMediaAsync(Guid id, SocialMediaRequest request, CancellationToken cancellationToken)
@@ -121,7 +131,11 @@ public class StoreService : BaseService, IStoreService
         var newSocialMedia = new SocialMedia(request.Link, request.Platform);
 
         store.AddSocialMedia(newSocialMedia);
-        await CommitAsync(cancellationToken);
+        var success = await CommitAsync(cancellationToken);
+
+        if (success)
+            await _cache.RemoveAsync($"store:{id}", cancellationToken);
+
     }
 
     public async Task RemovePhoneAsync(Guid id, RemovePhoneRequest request, CancellationToken cancellationToken)
@@ -141,7 +155,10 @@ public class StoreService : BaseService, IStoreService
         }
 
         store.RemovePhone(request.PhoneNumber);
-        await CommitAsync(cancellationToken);
+        var success = await CommitAsync(cancellationToken);
+
+        if (success)
+            await _cache.RemoveAsync($"store:{id}", cancellationToken);
     }
 
     public async Task AddPhoneAsync(Guid id, PhoneRequest request, CancellationToken cancellationToken)
@@ -166,7 +183,10 @@ public class StoreService : BaseService, IStoreService
         );
 
         store.AddPhone(newPhone);
-        await CommitAsync(cancellationToken);
+        var success = await CommitAsync(cancellationToken);
+
+        if (success)
+            await _cache.RemoveAsync($"store:{id}", cancellationToken);
     }
 
     public async Task UpdateAddressAsync(Guid id, AddressRequest request, CancellationToken cancellationToken)
@@ -196,7 +216,10 @@ public class StoreService : BaseService, IStoreService
         );
 
         store.SetAddress(newAddress);
-        await CommitAsync(cancellationToken);
+        var success = await CommitAsync(cancellationToken);
+
+        if (success)
+            await _cache.RemoveAsync($"store:{id}", cancellationToken);
     }
 
     public async Task UpdateProductTypesAsync(Guid id, ReplaceStoreProductTypesRequest request, CancellationToken cancellationToken)
@@ -231,7 +254,10 @@ public class StoreService : BaseService, IStoreService
         }
 
         store.ReplaceProductTypes(productTypes);
-        await CommitAsync(cancellationToken);
+        var success = await CommitAsync(cancellationToken);
+
+        if (success)
+            await _cache.RemoveAsync($"store:{id}", cancellationToken);
     }
 
     public async Task<StoreResponse?> UpdateStoreAsync(Guid id, UpdateStoreRequest request, CancellationToken cancellationToken)
@@ -269,7 +295,11 @@ public class StoreService : BaseService, IStoreService
 
         var success = await CommitAsync(cancellationToken);
 
-        return success ? store.ToResponse() : null;
+        if (!success)
+            return null;
+
+        await _cache.RemoveAsync($"store:{id}", cancellationToken);
+        return store.ToResponse();
     }
 
     public async Task<IReadOnlyList<StoreResponse>> ListStoreAsync(CancellationToken cancellationToken)
@@ -281,12 +311,29 @@ public class StoreService : BaseService, IStoreService
 
     public async Task<StoreResponse?> GetStoreByIdAsync(Guid id, CancellationToken cancellationToken)
     {
+        var cacheKey = $"store:{id}";
+        var cachedStore = await _cache.GetStringAsync(cacheKey, cancellationToken);
+
+        if (!string.IsNullOrEmpty(cachedStore))
+            return JsonSerializer.Deserialize<StoreResponse>(cachedStore);
+
         Store? store = await _repository.GetStoreByIdAsync(id, cancellationToken);
 
         if (store is null)
             return null;
 
-        return store.ToResponse();
+        var response = store.ToResponse();
+
+        await _cache.SetStringAsync(
+            cacheKey,
+            JsonSerializer.Serialize(response),
+            new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+            },
+            cancellationToken);
+
+        return response;
     }
 
     public async Task<StoreResponse?> CreateStoreAsync(CreateStoreRequest request, CancellationToken cancellationToken)
@@ -345,6 +392,9 @@ public class StoreService : BaseService, IStoreService
 
         var success = await CommitAsync(cancellationToken);
 
-        return success ? newStore.ToResponse() : null;
+        if (!success)
+            return null;
+
+        return newStore.ToResponse();
     }
 }

@@ -7,6 +7,8 @@ using Brechosfera.Domain.Repositories;
 using Brechosfera.Application.Requests;
 using Brechosfera.Domain.Entities;
 using Brechosfera.Domain.ValueObjects;
+using Microsoft.Extensions.Caching.Distributed;
+using System.Text.Json;
 
 namespace Brechosfera.Application.Services;
 
@@ -15,17 +17,20 @@ public class StoreReviewService : BaseService, IStoreReviewService
     private readonly IStoreReviewRepository _repository;
     private readonly IStoreRepository _storeRepository;
     private readonly ICurrentUser _currentUser;
+    private readonly IDistributedCache _cache;
 
     public StoreReviewService(
         IUnitOfWork unitOfWork,
         INotifier notifier,
         IStoreReviewRepository repository,
         IStoreRepository storeRepository,
-        ICurrentUser currentUser
+        ICurrentUser currentUser,
+        IDistributedCache cache
     ) : base(unitOfWork, notifier) {
         _repository = repository;
         _storeRepository = storeRepository;
         _currentUser = currentUser;
+        _cache = cache;
     }
 
     public async Task<List<StoreReviewResponse>> ListStoreReviewByStoreIdAsync(Guid storeId, CancellationToken cancellationToken)
@@ -43,12 +48,29 @@ public class StoreReviewService : BaseService, IStoreReviewService
 
     public async Task<StoreReviewResponse?> GetStoreReviewByIdAsync(Guid id, CancellationToken cancellationToken)
     {
+        var cacheKey = $"store-review:{id}";
+        var cachedStoreReview = await _cache.GetStringAsync(cacheKey, cancellationToken);
+
+        if (!string.IsNullOrEmpty(cachedStoreReview))
+            return JsonSerializer.Deserialize<StoreReviewResponse>(cachedStoreReview);
+
         var storeReview = await _repository.GetByIdAsync(id, cancellationToken);
 
         if (storeReview is null)
             return null;
 
-        return storeReview.ToResponse();
+        var response = storeReview.ToResponse();
+
+        await _cache.SetStringAsync(
+            cacheKey,
+            JsonSerializer.Serialize(response),
+            new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+            },
+            cancellationToken);
+
+        return response;
     }
 
     public async Task<StoreReviewResponse?> AddStoreReviewAsync(CreateStoreReviewRequest request, CancellationToken cancellationToken)
@@ -96,9 +118,9 @@ public class StoreReviewService : BaseService, IStoreReviewService
 
         _repository.Add(storeReview);
 
-        var result = await CommitAsync(cancellationToken);
+        var success = await CommitAsync(cancellationToken);
 
-        if (!result)
+        if (!success)
             return null;
 
         return storeReview.ToResponse();

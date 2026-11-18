@@ -1,12 +1,17 @@
 ﻿using Brechosfera.Application.Interfaces;
+using Brechosfera.Application.Mapper;
 using Brechosfera.Application.Notifications;
 using Brechosfera.Application.Requests;
 using Brechosfera.Application.Services;
 using Brechosfera.Domain.Abstractions;
 using Brechosfera.Domain.Entities;
 using Brechosfera.Domain.Repositories;
+using Brechosfera.Domain.ValueObjects;
 using Brechosfera.Tests.Common.Factories;
+using Microsoft.Extensions.Caching.Distributed;
 using NSubstitute;
+using System.Text;
+using System.Text.Json;
 
 namespace Brechosfera.Application.Tests;
 
@@ -16,6 +21,7 @@ public class StoreReviewServiceTests
     private readonly IStoreReviewRepository _repository = Substitute.For<IStoreReviewRepository>();
     private readonly IStoreRepository _storeRepository = Substitute.For<IStoreRepository>();
     private readonly ICurrentUser _currentUser = Substitute.For<ICurrentUser>();
+    private readonly IDistributedCache _cache = Substitute.For<IDistributedCache>();
     private readonly Notifier _notifier = new();
     private readonly StoreReviewService _service;
 
@@ -26,7 +32,8 @@ public class StoreReviewServiceTests
             notifier: _notifier,
             repository: _repository,
             storeRepository: _storeRepository,
-            currentUser: _currentUser);
+            currentUser: _currentUser,
+            cache: _cache);
 
         _unitOfWork.CommitAsync(Arg.Any<CancellationToken>()).Returns(true);
     }
@@ -42,6 +49,56 @@ public class StoreReviewServiceTests
         _storeRepository.GetByIdAsync(store.Id, Arg.Any<CancellationToken>()).Returns(store);
 
         return store;
+    }
+
+    [Fact]
+    public async Task GetStoreReviewByIdAsync_WhenRedisCacheHit_GetsReviewByRedis()
+    {
+        var review = new StoreReview(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            Rating.Create(4),
+            "Ótima loja.");
+        var cacheKey = $"store-review:{review.Id}";
+        var reviewSerializer = JsonSerializer.Serialize(review.ToResponse());
+        var reviewSerializerBytes = Encoding.UTF8.GetBytes(reviewSerializer);
+
+        _cache.GetAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(reviewSerializerBytes);
+
+        var result = await _service.GetStoreReviewByIdAsync(review.Id, CancellationToken.None);
+
+        await _repository.DidNotReceiveWithAnyArgs().GetByIdAsync(default!, default);
+        await _cache.DidNotReceiveWithAnyArgs().SetStringAsync(
+            "storeId",
+            "store_serialized",
+            Arg.Any<DistributedCacheEntryOptions>(),
+            Arg.Any<CancellationToken>());
+
+        Assert.NotNull(result);
+    }
+
+    [Fact]
+    public async Task GetStoreReviewByIdAsync_WhenRedisCacheMiss_SetToRedis()
+    {
+        var review = new StoreReview(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            Rating.Create(4),
+            "Ótima loja.");
+        var cacheKey = $"store-review:{review.Id}";
+
+        _repository.GetByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(review);
+
+        var result = await _service.GetStoreReviewByIdAsync(review.Id, CancellationToken.None);
+
+        await _repository.Received(1).GetByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
+        await _cache.ReceivedWithAnyArgs().SetStringAsync(
+            cacheKey,
+            "store_serialized",
+            Arg.Any<CancellationToken>());
+
+        Assert.NotNull(result);
     }
 
     [Fact]

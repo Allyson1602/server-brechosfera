@@ -1,5 +1,6 @@
 ﻿using Brechosfera.Application.Common;
 using Brechosfera.Application.Interfaces;
+using Brechosfera.Application.Mapper;
 using Brechosfera.Application.Messages;
 using Brechosfera.Application.Notifications;
 using Brechosfera.Application.Requests;
@@ -8,9 +9,10 @@ using Brechosfera.Domain.Abstractions;
 using Brechosfera.Domain.Entities;
 using Brechosfera.Domain.Enums;
 using Brechosfera.Domain.Repositories;
-using Brechosfera.Domain.ValueObjects;
 using Brechosfera.Tests.Common.Factories;
+using Microsoft.Extensions.Caching.Distributed;
 using NSubstitute;
+using System.Text.Json;
 
 namespace Brechosfera.Application.Tests;
 
@@ -22,6 +24,7 @@ public class StoreServiceTests
     private readonly IIdentityService _identity = Substitute.For<IIdentityService>();
     private readonly IMessagePublisher _publisher = Substitute.For<IMessagePublisher>();
     private readonly ICurrentUser _currentUser = Substitute.For<ICurrentUser>();
+    private readonly IDistributedCache _cache = Substitute.For<IDistributedCache>();
     private readonly Notifier _notifier = new();
     private readonly StoreService _service;
 
@@ -35,8 +38,11 @@ public class StoreServiceTests
             repository: _storeRepository,
             productTypeRepository: Substitute.For<IProductTypeRepository>(),
             currentUser: _currentUser,
-            storeDeletion: new StoreDeletion(_eventRepository)
+            storeDeletion: new StoreDeletion(_eventRepository),
+            cache: _cache
         );
+
+        _unitOfWork.CommitAsync(Arg.Any<CancellationToken>()).Returns(true);
     }
 
     public static TheoryData<string, Func<StoreService, Guid, Task>> StoreChanges => new()
@@ -83,6 +89,72 @@ public class StoreServiceTests
     }
 
     [Fact]
+    public async Task GetStoreByIdAsync_WhenRedisCacheHit_GetsStoryByRedis()
+    {
+        var store = StoreFactory.Create();
+        var storeSerialized = JsonSerializer.Serialize(store.ToResponse());
+        var storeSerializedBytes = System.Text.Encoding.UTF8.GetBytes(storeSerialized);
+
+        _storeRepository.GetStoreByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(store);
+        _cache.GetAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(storeSerializedBytes);
+
+        var result = await _service.GetStoreByIdAsync(store.Id, CancellationToken.None);
+
+        await _storeRepository.DidNotReceiveWithAnyArgs().GetStoreByIdAsync(
+            Arg.Any<Guid>(), Arg.Any<CancellationToken>());
+
+        await _cache.DidNotReceiveWithAnyArgs().SetStringAsync(
+            "storeId",
+            "store_serialized",
+            Arg.Any<DistributedCacheEntryOptions>(),
+            Arg.Any<CancellationToken>());
+
+        Assert.Equal(store.Name, result?.Name);
+    }
+
+    [Fact]
+    public async Task GetStoreByIdAsync_WhenRedisCacheMiss_SetToRedis()
+    {
+        var store = StoreFactory.Create();
+        var cacheKey = $"store:{store.Id}";
+
+        _storeRepository
+            .GetStoreByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+            .Returns(store);
+
+        var result = await _service.GetStoreByIdAsync(store.Id, CancellationToken.None);
+
+        await _cache.ReceivedWithAnyArgs().SetStringAsync(
+            cacheKey,
+            "store_serialized",
+            Arg.Any<DistributedCacheEntryOptions>(),
+            Arg.Any<CancellationToken>());
+
+        Assert.Equal(store.Name, result?.Name);
+    }
+
+    [Fact]
+    public async Task DeleteStoreAsync_WhenDeleteStore_RemoveCacheStoreRedis()
+    {
+        var userId = Guid.NewGuid();
+        var store = StoreFactory.Create(userId);
+
+        _storeRepository
+            .GetByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+            .Returns(store);
+        _currentUser.UserId.Returns(userId);
+
+        var result = await _service.DeleteStoreAsync(store.Id, CancellationToken.None);
+
+        await _cache.Received(1).RemoveAsync(
+            Arg.Is<string>(g => g == $"store:{store.Id}"),
+            Arg.Any<CancellationToken>());
+
+        Assert.True(result);
+    }
+
+    [Fact]
     public async Task CreateStoreAsync_WhenNameAlreadyExists_DoesNotCreateStore()
     {
         _storeRepository.ExistsByNameAsync("Brechó Aurora", Arg.Any<Guid?>(), Arg.Any<CancellationToken>()).Returns(true);
@@ -90,7 +162,7 @@ public class StoreServiceTests
         var request = new CreateStoreRequest(
             Name: " Brechó Aurora ",
             AveragePrice: 50m,
-            LocalType: Domain.Enums.ELocalType.Physical,
+            LocalType: ELocalType.Physical,
             ProductTypeKeys: ["camisetas"],
             AverageQuantity: null,
             Description: null,
@@ -115,7 +187,6 @@ public class StoreServiceTests
 
         _storeRepository.GetByIdAsync(store.Id, Arg.Any<CancellationToken>()).Returns(store);
         _currentUser.UserId.Returns(ownerId);
-        _unitOfWork.CommitAsync(Arg.Any<CancellationToken>()).Returns(true);
         _identity.GetByIdAsync(ownerId).Returns(owner);
         _eventRepository.ListByStoreIdsAsync(Arg.Any<IReadOnlyCollection<Guid>>(), Arg.Any<CancellationToken>()).Returns(new List<Event>());
 

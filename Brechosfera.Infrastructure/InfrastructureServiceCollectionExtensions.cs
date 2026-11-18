@@ -13,6 +13,12 @@ public static class InfrastructureServiceCollectionExtensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = configuration.GetConnectionString("Redis");
+            options.InstanceName = "brechosfera:";
+        });
+
         services.Configure<RabbitMqSettings>(configuration.GetSection(RabbitMqSettings.Section));
         services.Configure<SmtpSettings>(configuration.GetSection(SmtpSettings.Section));
 

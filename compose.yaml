@@ -1,4 +1,10 @@
 services:
+  redis:
+    image: redis:7-alpine
+    container_name: brechosfera-redis
+    ports:
+      - "6379:6379"
+
   mariadb:
     image: mariadb:11.4
     container_name: brechosfera-mariadb
